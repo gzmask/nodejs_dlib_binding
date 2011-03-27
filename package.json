@@ -2,6 +2,6 @@
 , "description" : "An eio_custom example program"
 , "version" : "1.0.0"
 , "author" : "Isaac Z. Schlueter <i@izs.me> (http://blog.izs.me/)"
-, "main" : "build/default/nas.node"
+, "main" : "build/default/bayesian.node"
 , "scripts" : { "test" : "node test.js" }
 }

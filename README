@@ -4,6 +4,10 @@ To run:
 
     node-waf configure build && node test.js
 
+Everytime linkage changes:
+	
+    rm -rf build
+
 Or, you can link or install it with npm.  Note that it has hardly anything
 in the package.json, either.
 
