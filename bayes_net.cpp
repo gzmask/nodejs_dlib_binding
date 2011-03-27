@@ -46,11 +46,12 @@
 
 using namespace dlib;
 using namespace std;
+#include "bayes_net.h"
 
 // ----------------------------------------------------------------------------------------
-
-int main()
+void bayesian_test()
 {
+    cout<<"hello Raiden"<<endl;
     // There are many useful convenience functions in this namespace.  They all
     // perform simple access or modify operations on the nodes of a bayesian network. 
     // You don't have to use them but they are convenient and they also will check for

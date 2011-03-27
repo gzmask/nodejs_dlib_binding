@@ -14,4 +14,4 @@ def build(bld):
   # without this, eio_custom doesn't keep a ref to the req->data
   obj.cxxflags = ["-D_FILE_OFFSET_BITS=64", "-D_LARGEFILE_SOURCE"]
   obj.target = "bayesian"
-  obj.source = "bayesian.cpp"
+  obj.source = "bayesian_bind.cpp", "bayes_net.cpp"

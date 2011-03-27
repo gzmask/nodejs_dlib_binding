@@ -7,6 +7,7 @@
 using namespace std;
 using namespace node;
 using namespace v8;
+#include "bayes_net.h"
 
 static Handle<Value> DoSomethingAsync (const Arguments&); //this deploys DoSomething/DoSomething_After into the thread pool using libeio(eio_custom).
 static int DoSomething (eio_req *);
@@ -51,6 +52,7 @@ static Handle<Value> DoSomethingAsync (const Arguments& args) {
 // doing v8 things in here will make bad happen.
 static int DoSomething (eio_req *req) {
   struct simple_request * sr = (struct simple_request *)req->data;
+  bayesian_test();
   sleep(2); // just to make it less pointless to be async.
   req->result = sr->x + sr->y;
   return 0;
