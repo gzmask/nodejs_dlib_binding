@@ -13,9 +13,10 @@ bayesian.doSomething(3, 4, "goodbye", function (er, res, n) {
 
 
 //this is the server part
-var express = require('./node_modules/express'),
+var express = require('express'),
         app = express.createServer();
 
+app.set('view engine', 'ejs');
 
 app.get('/', function(req, res){
 	bayesian.doSomething(2, 4, "hello", function (error, result, name) {
@@ -25,6 +26,9 @@ app.get('/', function(req, res){
         //res.send('Hello World');
 });
 
+app.get('/index', function(req, res){
+	res.render('index', { title: 'Bayesian network' });
+});
 
 app.listen(8080);
 console.log('Express server started on port %s', app.address().port);

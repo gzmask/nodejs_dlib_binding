@@ -1,12 +1,11 @@
-This is about the simplest reduction you can get for using eio_custom.
+Require npm packages:
+	express, ejs
 
 To run:
-
-    node-waf configure build && node test.js
+	node-waf configure build && node test.js
 
 Everytime linkage changes:
-	
-    rm -rf build
+	rm -rf build
 
 micheil: iirc, that signature is (error, last_result, next), gzmask
 [11:10pm] gzmask: micheil: thanks, I am trying to locate these three parameters in nas.cc but couldn't found it. I guess it's pre-define in the libbraries?
