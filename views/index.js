@@ -5,7 +5,7 @@
 
 var ejs = require('ejs')
   , fs = require('fs')
-  , str = fs.readFileSync(__dirname + '/list.ejs', 'utf8');
+  , str = fs.readFileSync(__dirname + '/index.ejs', 'utf8');
 
 var ret = ejs.render(str, {
   locals: {
