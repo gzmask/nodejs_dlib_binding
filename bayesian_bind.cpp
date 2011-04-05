@@ -52,7 +52,7 @@ static Handle<Value> DoSomethingAsync (const Arguments& args) {
 // doing v8 things in here will make bad happen.
 static int DoSomething (eio_req *req) {
   struct simple_request * sr = (struct simple_request *)req->data;
-  sleep(2); // just to make it less pointless to be async.
+  //sleep(2); // just to make it less pointless to be async.
   //req->result = sr->x + sr->y;
   req->result = bayesian_test(sr->x, sr->y);
   return 0;
