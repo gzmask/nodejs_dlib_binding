@@ -1,1 +1,1 @@
-void bayesian_test();
+int bayesian_test(int x, int y);

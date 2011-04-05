@@ -49,7 +49,7 @@ using namespace std;
 #include "bayes_net.h"
 
 // ----------------------------------------------------------------------------------------
-void bayesian_test()
+int bayesian_test(int x, int y)
 {
     // There are many useful convenience functions in this namespace.  They all
     // perform simple access or modify operations on the nodes of a bayesian network. 
@@ -291,6 +291,8 @@ void bayesian_test()
     cout << "p(B=1 | C=1) = " << (double)B_count/(double)rounds << endl;
     cout << "p(C=1 | C=1) = " << (double)C_count/(double)rounds << endl;
     cout << "p(D=1 | C=1) = " << (double)D_count/(double)rounds << endl;
+	
+    return x+y;
 }
 
 
