@@ -1,7 +1,7 @@
-{ "name" : "async-simple"
-, "description" : "An eio_custom example program"
+{ "name" : "bayesian_node"
+, "description" : "bayesian network C++ node.js binding"
 , "version" : "1.0.0"
-, "author" : "Isaac Z. Schlueter <i@izs.me> (http://blog.izs.me/)"
+, "author" : "gzmask@gmail.com"
 , "main" : "build/default/bayesian.node"
 , "scripts" : { "test" : "node test.js" }
 }

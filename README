@@ -8,11 +8,6 @@ Everytime linkage changes:
 	
     rm -rf build
 
-Or, you can link or install it with npm.  Note that it has hardly anything
-in the package.json, either.
-
-    npm link && npm test async-simple
-
 micheil: iirc, that signature is (error, last_result, next), gzmask
 [11:10pm] gzmask: micheil: thanks, I am trying to locate these three parameters in nas.cc but couldn't found it. I guess it's pre-define in the libbraries?
 [11:10pm] micheil: the callback function happens after everything
