@@ -12,7 +12,7 @@ bayesian.doSomething(3, 4, "goodbye", function (er, res, n) {
 });*/
 
 
-//this is the server part
+//start the server 
 var express = require('express'),
         app = express.createServer();
 
