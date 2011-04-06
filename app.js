@@ -16,9 +16,9 @@ bayesian.doSomething(3, 4, "goodbye", function (er, res, n) {
 var express = require('express');
 var app = express.createServer();
 
-app.register('.html', require('ejs'));
+//app.register('.html', require('ejs'));
 app.set('views', __dirname + '/views');
-app.set('view engine', 'html');
+app.set('view engine', 'ejs');
 
 app.get('/', function(req, res){
 	bayesian.doSomething(2, 4, "hello", function (error, result, name) {
