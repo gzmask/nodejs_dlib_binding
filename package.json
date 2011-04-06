@@ -3,5 +3,5 @@
 , "version" : "1.0.0"
 , "author" : "gzmask@gmail.com"
 , "main" : "build/default/bayesian.node"
-, "scripts" : { "test" : "node test.js" }
+, "scripts" : { "app" : "node app.js" }
 }

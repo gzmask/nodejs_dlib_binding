@@ -13,12 +13,12 @@ bayesian.doSomething(3, 4, "goodbye", function (er, res, n) {
 
 
 //start the server 
-var express = require('express'),
-        app = express.createServer();
+var express = require('express');
+var app = express.createServer();
 
-app.configure(function(){
-	app.set('view engine', 'ejs');
-});
+app.register('.html', require('ejs'));
+app.set('views', __dirname + '/views');
+app.set('view engine', 'html');
 
 app.get('/', function(req, res){
 	bayesian.doSomething(2, 4, "hello", function (error, result, name) {
@@ -29,7 +29,7 @@ app.get('/', function(req, res){
 });
 
 app.get('/index', function(req, res){
-	res.render('index', { title: 'Bayesian network' });
+	res.render('index', {locals:{ names:['foo','bar','baz']}});
 });
 
 app.listen(8080);
