@@ -28,7 +28,6 @@ app.get('/', function(req, res){
 		console.log("js "+(Date.now() - start), error, result, name);
 		res.send("js " + (Date.now() - start) + error + result + name);
 	});
-        //res.send('Hello World');
 });
 
 app.get('/names', function(req, res){
