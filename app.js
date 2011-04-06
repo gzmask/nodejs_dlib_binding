@@ -28,8 +28,8 @@ app.get('/', function(req, res){
         //res.send('Hello World');
 });
 
-app.get('/index', function(req, res){
-	res.render('index', {locals:{ names:['foo','bar','baz']}});
+app.get('/names', function(req, res){
+	res.render('names', {locals:{ names:['foo','bar','baz']}});
 });
 
 app.listen(8080);
