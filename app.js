@@ -36,8 +36,9 @@ app.get('/names', function(req, res){
 });
 
 app.post('/evidence', function(req, res){
-	console.log(req.body.user); //{ name: 'ray', email: 'ray.lei@uregina.ca' }
-	res.redirect('back');
+	//console.log(req.body.user); //{ name: 'ray', email: 'ray.lei@uregina.ca' }
+	console.log(req.body); //user: { name: 'ray', email: 'gzmask@gmail.com' } }
+	res.redirect('/names');
 });
 
 app.listen(8080);
