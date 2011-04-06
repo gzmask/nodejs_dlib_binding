@@ -17,6 +17,7 @@ var express = require('express');
 var app = express.createServer();
 
 app.configure(function(){
+	app.use(express.bodyParser());
 	app.use(express.static(__dirname + '/public'));
 	app.set('views', __dirname + '/views');
 	app.set('view engine', 'ejs');
@@ -24,14 +25,19 @@ app.configure(function(){
 
 app.get('/', function(req, res){
 	bayesian.doSomething(2, 4, "hello", function (error, result, name) {
-	  console.log("js "+(Date.now() - start), error, result, name);
-          res.send("js " + (Date.now() - start) + error + result + name);
+		console.log("js "+(Date.now() - start), error, result, name);
+		res.send("js " + (Date.now() - start) + error + result + name);
 	});
         //res.send('Hello World');
 });
 
 app.get('/names', function(req, res){
 	res.render('names', {locals:{ names:['foo','bar','baz']}});
+});
+
+app.post('/evidence', function(req, res){
+	console.log(req.body.user); //{ name: 'ray', email: 'ray.lei@uregina.ca' }
+	res.redirect('back');
 });
 
 app.listen(8080);
