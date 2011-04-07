@@ -24,22 +24,30 @@ This is the paper's abstract \ldots
 \section{Introduction}
 Using node.js, Dlib C++ Library to build an web application that answers student queries about carrer planning questions.
 
-\section{Design}
+\section{Course Prerequisite Inference}\label{Course Prerequisite Inference}
 Here is a directed acrylic graph A to represent the course prerequisite relations.\\
 \includegraphics[scale=0.3]{g1_1.jpg}\\
+Figure 1.1
 
 i.e Querying the probability of taking CS411 in the future, provided student have taken CS110:\\
 \begin{enumerate}
-	\item Search the shortest path between $110'$ to $411'$ in A\\
-	\item Which is $110' -> 115' -> 210' -> 310' -> 411'$\\
-	\item The length of this path is 4, which means student needs at least 4 semester to finish CS411, provided there is no class not bing offered during these semesters.\\
-	\item If there are classes in the path not being offered, we need to add extra semesters accordingly.\\
-	\item Run JTP on A, query $P\{CS411 = 1 \mid CS110 = 1\}$\\
-	\item Provide feedback to student, telling the least semesters he need to finish CS411 with a probability.\\
+	\item Search the shortest path between $110'$ to $411'$ in A
+	\item Which is $110' -> 115' -> 210' -> 310' -> 411'$
+	\item The length of this path is 4, which means student needs at least 4 semesters to finish CS411, provided there is no class not bing offered during these semesters.
+	\item If there are classes in the path not being offered, we need to add extra semesters accordingly.
+	\item Run JTP on A, query $P\{CS411 = 1 \mid CS110 = 1\}$
+	\item Provide feedback to student, telling the least semesters he need to finish CS411 with a probability.
 \end{enumerate}
 
-\section{Previous work}\label{previous work}
-A much longer \LaTeXe{} example was written by Gil~\cite{Gil:02}.
+\section{Program Requirement}
+A Program Requirement node would be an auxiliary node. Again, using Graph A in Figure 1.1 as an example\\
+If it requires 110, 210, 201, 310 330, two of the 400 levels and 120 credit hours to graduate:
+\begin{enumerate}
+	\item An auxiliary node "Required Courses", which has the parents of 110, 210, 201, 310, 330
+	\item An auxiliary node "400 level courses", which has the parents of all 400 levels classes
+	\item An auxiliary node "120 Credit hours"
+	
+\end{enumerate}
 
 \section{Results}\label{results}
 In this section we describe the results.

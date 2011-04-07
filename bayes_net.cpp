@@ -107,7 +107,7 @@ int bayesian_test(int x, int y)
 
 
     // Here we specify that p(C=1) = 0.001
-    // parent_state is empty in this case since B is a root node. 
+    // parent_state is empty in this case since C is a root node. 
     set_node_probability(bn, C, 1, parent_state, 0.001);
     // Here we specify that p(C=0) = 1-0.001
     set_node_probability(bn, C, 0, parent_state, 1-0.001);
