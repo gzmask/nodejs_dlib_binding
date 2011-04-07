@@ -184,7 +184,7 @@ int bayesian_test(int x, int y)
 
 
     // now print out the probabilities for each node
-    cout << "Using the join tree algorithm:\n";
+    cout << "Using the join tree algorithm, prior:\n";
     cout << "p(A=1) = " << solution.probability(A)(1) << endl;
     cout << "p(A=0) = " << solution.probability(A)(0) << endl;
     cout << "p(B=1) = " << solution.probability(B)(1) << endl;
@@ -208,7 +208,7 @@ int bayesian_test(int x, int y)
     bayesian_network_join_tree solution_with_evidence(bn, join_tree);
 
     // now print out the probabilities for each node
-    cout << "Using the join tree algorithm:\n";
+    cout << "Using the join tree algorithm, post:\n";
     cout << "p(A=1 | C=1) = " << solution_with_evidence.probability(A)(1) << endl;
     cout << "p(A=0 | C=1) = " << solution_with_evidence.probability(A)(0) << endl;
     cout << "p(B=1 | C=1) = " << solution_with_evidence.probability(B)(1) << endl;
