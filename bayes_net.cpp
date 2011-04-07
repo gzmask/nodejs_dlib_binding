@@ -158,14 +158,14 @@ int bayesian_test(int x, int y)
 
     // now print out the probabilities for each node
     cout << "Using the join tree algorithm, post:\n";
-    cout << "p(cs110=1) = " << solution.probability(cs110)(1) << endl;
-    cout << "p(cs110=0) = " << solution.probability(cs110)(0) << endl;
-    cout << "p(cs201=1) = " << solution.probability(cs201)(1) << endl;
-    cout << "p(cs201=0) = " << solution.probability(cs201)(0) << endl;
-    cout << "p(cs207=1) = " << solution.probability(cs207)(1) << endl;
-    cout << "p(cs207=0) = " << solution.probability(cs207)(0) << endl;
-    cout << "p(cs115=1) = " << solution.probability(cs115)(1) << endl;
-    cout << "p(cs115=0) = " << solution.probability(cs115)(0) << endl;
+    cout << "p(cs110=1|cs110=1) = " << solution_with_evidence.probability(cs110)(1) << endl;
+    cout << "p(cs110=0|cs110=1) = " << solution_with_evidence.probability(cs110)(0) << endl;
+    cout << "p(cs201=1|cs110=1) = " << solution_with_evidence.probability(cs201)(1) << endl;
+    cout << "p(cs201=0|cs110=1) = " << solution_with_evidence.probability(cs201)(0) << endl;
+    cout << "p(cs207=1|cs110=1) = " << solution_with_evidence.probability(cs207)(1) << endl;
+    cout << "p(cs207=0|cs110=1) = " << solution_with_evidence.probability(cs207)(0) << endl;
+    cout << "p(cs115=1|cs110=1) = " << solution_with_evidence.probability(cs115)(1) << endl;
+    cout << "p(cs115=0|cs110=1) = " << solution_with_evidence.probability(cs115)(0) << endl;
     cout << "\n\n\n";
 
     // Note that when we made our solution_with_evidence object we reused our join_tree object.
