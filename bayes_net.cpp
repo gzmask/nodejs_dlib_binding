@@ -35,9 +35,9 @@ int bayesian_test(int x, int y)
         cs115 = 3,
 	math105 = 4,
 	math110 = 5,
-	cs100 = 6,
-	cs270 = 7,
-	engl100 = 8
+	cs270 = 6
+	//cs100 = 7,
+	//engl100 = 8
     };
 
     // The next few blocks of code setup our bayesian network.
@@ -45,15 +45,16 @@ int bayesian_test(int x, int y)
     // The first thing we do is tell the bn object how many nodes it has
     // and also add the three edges.  Again, we are using the network
     // shown in ASCII art at the top of this file.
-    bn.set_number_of_nodes(9);
+    bn.set_number_of_nodes(7);
     bn.add_edge(cs110, cs201);
     bn.add_edge(cs110, cs207);
     bn.add_edge(cs110, cs115);
-    bn.add_edge(math105, cs115);
     bn.add_edge(math110, cs115);
-    bn.add_edge(cs100, cs270);
-    bn.add_edge(engl100, cs270);
-    bn.add_edge(cs110, cs270);
+    bn.add_edge(math105, cs115);
+    cout<<"debug:"<<cs270<<endl;
+    //bn.add_edge(cs110, cs270);
+    //bn.add_edge(cs100, cs270);
+    //bn.add_edge(engl100, cs270);
 
 
     // Now we inform all the nodes in the network that they are binary
@@ -64,9 +65,9 @@ int bayesian_test(int x, int y)
     set_node_num_values(bn, cs115, 2);
     set_node_num_values(bn, math105, 2);
     set_node_num_values(bn, math110, 2);
-    set_node_num_values(bn, cs100, 2);
-    set_node_num_values(bn, cs270, 2);
-    set_node_num_values(bn, engl100, 2);
+    //set_node_num_values(bn, cs207, 2);
+    //set_node_num_values(bn, cs100, 2);
+    //set_node_num_values(bn, engl100, 2);
 
     assignment parent_state;
     // Now we will enter all the conditional probability information for each node.
@@ -81,12 +82,12 @@ int bayesian_test(int x, int y)
     set_node_probability(bn, cs110, 0, parent_state, 1-0.5);
 
     //==============================p(cs100=1) = 0.5==============================
-    set_node_probability(bn, cs100, 1, parent_state, 0.5);
-    set_node_probability(bn, cs100, 0, parent_state, 1-0.5);
+    //set_node_probability(bn, cs100, 1, parent_state, 0.5);
+    //set_node_probability(bn, cs100, 0, parent_state, 1-0.5);
 
     //==============================p(engl100=1) = 0.5==============================
-    set_node_probability(bn, engl100, 1, parent_state, 0.5);
-    set_node_probability(bn, engl100, 0, parent_state, 1-0.5);
+    //set_node_probability(bn, engl100, 1, parent_state, 0.5);
+    //set_node_probability(bn, engl100, 0, parent_state, 1-0.5);
 
     //==============================p(math105=1) = 0.5==============================
     set_node_probability(bn, math105, 1, parent_state, 0.5);
@@ -170,8 +171,8 @@ int bayesian_test(int x, int y)
     set_node_probability(bn, cs115, 0, parent_state, 1-0);
 
 
-    //==================p(cs115 | cs110=a, cs100=b, engl100=c) CPT===================== 
-    parent_state.clear();
+    //==================p(cs115 | cs110, cs100, engl100) CPT===================== 
+    /*parent_state.clear();
     parent_state.add(cs110,1);
     parent_state.add(cs100, 1);
     parent_state.add(engl100, 1);
@@ -211,7 +212,7 @@ int bayesian_test(int x, int y)
     parent_state[cs100] = 0;
     parent_state[engl100] = 0;
     set_node_probability(bn, cs115, 1, parent_state, 0);
-    set_node_probability(bn, cs115, 0, parent_state, 1-0);
+    set_node_probability(bn, cs115, 0, parent_state, 1-0);*/
 
 
     // We have now finished setting up our bayesian network.  So lets compute some 
@@ -261,8 +262,6 @@ int bayesian_test(int x, int y)
     // calls.
     set_node_value(bn, cs110, 1);
     set_node_as_evidence(bn, cs110);
-    set_node_value(bn, math105, 1);
-    set_node_as_evidence(bn, math105);
 
     // Now we want to compute the probabilities of all the nodes in the network again
     // given that we now know that cs110 is 1.  We can do this as follows:
