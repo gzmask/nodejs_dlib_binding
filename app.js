@@ -34,10 +34,31 @@ app.get('/names', function(req, res){
 	res.render('names', {locals:{ names:['foo','bar','baz']}});
 });
 
+//outputs the query form
+app.get('/index', function(req, res){
+	res.render('index');
+});
+
+//get the student's feedback, sent to bayesian network, render output
 app.post('/evidence', function(req, res){
 	//console.log(req.body.user); //{ name: 'ray', email: 'ray.lei@uregina.ca' }
 	console.log(req.body); //user: { name: 'ray', email: 'gzmask@gmail.com' } }
-	res.redirect('/names');
+	bayesian.doSomething(req.body.user.x, req.body.user.y, "hello", function (error, result, name) {
+		console.log("js "+(Date.now() - start), error, result, name);
+		//res.send("js " + (Date.now() - start) + error + result + name);
+		res.render('evidence', 
+			{locals:
+				{ names:['foo','bar','baz'], 
+				'result':result, 
+				'name':name,
+				'user_name':req.body.user.name,
+				'user_email':req.body.user.email, 
+				'user_x':req.body.user.x, 
+				'user_y':req.body.user.y,
+				passed_courses : req.body.passed_course
+				}});
+	});
+	//res.redirect('/names');
 });
 
 app.listen(8080);
