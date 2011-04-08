@@ -3,11 +3,15 @@
 #include "dlib/graph.h"
 #include "dlib/directed_graph.h"
 #include <iostream>
-
+	
 
 using namespace dlib;
 using namespace std;
 #include "bayes_net.h"
+
+const float easy = 0.8;
+const float middle = 0.7;
+const float hard = 0.6;
 
 // ----------------------------------------------------------------------------------------
 int bayesian_test(int x, int y)
@@ -33,11 +37,18 @@ int bayesian_test(int x, int y)
         cs201 = 1,
         cs207 = 2,
         cs115 = 3,
-	math105 = 4,
-	math110 = 5,
-	cs270 = 6
-	//cs100 = 7,
-	//engl100 = 8
+		math105 = 4,
+		math110 = 5,
+		cs270 = 6,
+		cs100 = 7,
+		engl100 = 8,
+		math122 = 9,
+		math111 = 10,
+		cs261 = 11,
+		cs280 = 12,
+		cs301 = 13,
+		cs203 = 14,
+		cs271 = 15
     };
 
     // The next few blocks of code setup our bayesian network.
@@ -45,16 +56,26 @@ int bayesian_test(int x, int y)
     // The first thing we do is tell the bn object how many nodes it has
     // and also add the three edges.  Again, we are using the network
     // shown in ASCII art at the top of this file.
-    bn.set_number_of_nodes(7);
+    bn.set_number_of_nodes(16);
     bn.add_edge(cs110, cs201);
     bn.add_edge(cs110, cs207);
     bn.add_edge(cs110, cs115);
     bn.add_edge(math110, cs115);
     bn.add_edge(math105, cs115);
-    cout<<"debug:"<<cs270<<endl;
-    //bn.add_edge(cs110, cs270);
-    //bn.add_edge(cs100, cs270);
-    //bn.add_edge(engl100, cs270);
+    bn.add_edge(cs110, cs270);
+    bn.add_edge(cs100, cs270);
+    bn.add_edge(engl100, cs270);
+	bn.add_edge(math122, cs261);
+	bn.add_edge(math111, cs261);
+	bn.add_edge(cs110, cs261);
+	bn.add_edge(cs115, cs261);
+	bn.add_edge(engl100, cs280);
+	bn.add_edge(cs110, cs280);
+	bn.add_edge(cs201, cs301);
+	bn.add_edge(cs115, cs203);
+	bn.add_edge(cs110, cs271);
+	bn.add_edge(cs270, cs271);
+
 
 
     // Now we inform all the nodes in the network that they are binary
@@ -65,9 +86,16 @@ int bayesian_test(int x, int y)
     set_node_num_values(bn, cs115, 2);
     set_node_num_values(bn, math105, 2);
     set_node_num_values(bn, math110, 2);
-    //set_node_num_values(bn, cs207, 2);
-    //set_node_num_values(bn, cs100, 2);
-    //set_node_num_values(bn, engl100, 2);
+    set_node_num_values(bn, cs270, 2);
+    set_node_num_values(bn, cs100, 2);
+    set_node_num_values(bn, engl100, 2);
+    set_node_num_values(bn, math122, 2);
+    set_node_num_values(bn, math111, 2);
+    set_node_num_values(bn, cs261, 2);
+    set_node_num_values(bn, cs280, 2);
+    set_node_num_values(bn, cs301, 2);
+    set_node_num_values(bn, cs203, 2);
+    set_node_num_values(bn, cs271, 2);
 
     assignment parent_state;
     // Now we will enter all the conditional probability information for each node.
@@ -82,12 +110,12 @@ int bayesian_test(int x, int y)
     set_node_probability(bn, cs110, 0, parent_state, 1-0.5);
 
     //==============================p(cs100=1) = 0.5==============================
-    //set_node_probability(bn, cs100, 1, parent_state, 0.5);
-    //set_node_probability(bn, cs100, 0, parent_state, 1-0.5);
+    set_node_probability(bn, cs100, 1, parent_state, 0.5);
+    set_node_probability(bn, cs100, 0, parent_state, 1-0.5);
 
     //==============================p(engl100=1) = 0.5==============================
-    //set_node_probability(bn, engl100, 1, parent_state, 0.5);
-    //set_node_probability(bn, engl100, 0, parent_state, 1-0.5);
+    set_node_probability(bn, engl100, 1, parent_state, 0.5);
+    set_node_probability(bn, engl100, 0, parent_state, 1-0.5);
 
     //==============================p(math105=1) = 0.5==============================
     set_node_probability(bn, math105, 1, parent_state, 0.5);
@@ -97,123 +125,276 @@ int bayesian_test(int x, int y)
     set_node_probability(bn, math110, 1, parent_state, 0.5);
     set_node_probability(bn, math110, 0, parent_state, 1-0.5);
 
+    //==============================p(math111=1) = 0.5==============================
+    set_node_probability(bn, math111, 1, parent_state, 0.5);
+    set_node_probability(bn, math111, 0, parent_state, 1-0.5);
+
+    //==============================p(math122=1) = 0.5==============================
+    set_node_probability(bn, math122, 1, parent_state, 0.5);
+    set_node_probability(bn, math122, 0, parent_state, 1-0.5);
 
     // This is our first node that has parents. So we set the parent_state
     // object to reflect that cs201 has cs110 as parents.
     parent_state.add(cs110, 1);
     //==============================p(cs201=1 | cs110=1) = 0.8============================== 
-    set_node_probability(bn, cs201, 1, parent_state, 0.8);
-    set_node_probability(bn, cs201, 0, parent_state, 1-0.8);
+    set_node_probability(bn, cs201, 1, parent_state, easy);
+    set_node_probability(bn, cs201, 0, parent_state, 1-easy);
     parent_state[cs110] = 0;
     //==============================p(cs201=1 | cs110=0) = 0==============================
     set_node_probability(bn, cs201, 1, parent_state, 0);
     set_node_probability(bn, cs201, 0, parent_state, 1-0);
 
-    // Here we set probabilities for node cs207.
+
+    //==============================p(cs207 | cs110) CPT============================== 
     parent_state.clear();
     parent_state.add(cs110,1);
-    //==============================p(cs207=1 | cs110=1) = 0.8============================== 
-    set_node_probability(bn, cs207, 1, parent_state, 0.8);
-    set_node_probability(bn, cs207, 0, parent_state, 1-0.8);
+    set_node_probability(bn, cs207, 1, parent_state, easy);
+    set_node_probability(bn, cs207, 0, parent_state, 1-easy);
     parent_state[cs110] = 0;
-    //==============================p(cs207=1 | cs110=0) = 0============================== 
     set_node_probability(bn, cs207, 1, parent_state, 0);
     set_node_probability(bn, cs207, 0, parent_state, 1-0);
 
+    //==================p(cs115 | cs110, math105, math110) CPT===================== 
     parent_state.clear();
     parent_state.add(cs110,1);
     parent_state.add(math105, 1);
     parent_state.add(math110, 1);
-    //==================p(cs115=1 | cs110=1, math105=1, math110=1) = 0.8===================== 
-    set_node_probability(bn, cs115, 1, parent_state, 0.8);
-    set_node_probability(bn, cs115, 0, parent_state, 1-0.8);
+    set_node_probability(bn, cs115, 1, parent_state, easy);
+    set_node_probability(bn, cs115, 0, parent_state, 1-easy);
     parent_state[cs110] = 1;
     parent_state[math105] = 1;
     parent_state[math110] = 0;
-    //==================p(cs115=1 | cs110=1, math105=1, math110=0) = 0.8===================== 
-    set_node_probability(bn, cs115, 1, parent_state, 0.8);
-    set_node_probability(bn, cs115, 0, parent_state, 1-0.8);
+    set_node_probability(bn, cs115, 1, parent_state, easy);
+    set_node_probability(bn, cs115, 0, parent_state, 1-easy);
     parent_state[cs110] = 1;
     parent_state[math105] = 0;
     parent_state[math110] = 1;
-    //==================p(cs115=1 | cs110=1, math105=0, math110=1) = 0.8===================== 
-    set_node_probability(bn, cs115, 1, parent_state, 0.8);
-    set_node_probability(bn, cs115, 0, parent_state, 1-0.8);
+    set_node_probability(bn, cs115, 1, parent_state, easy);
+    set_node_probability(bn, cs115, 0, parent_state, 1-easy);
     parent_state[cs110] = 1;
     parent_state[math105] = 0;
     parent_state[math110] = 0;
-    //==================p(cs115=1 | cs110=1, math105=0, math110=0) = 0.8===================== 
-    set_node_probability(bn, cs115, 1, parent_state, 0.8);
-    set_node_probability(bn, cs115, 0, parent_state, 1-0.8);
+    set_node_probability(bn, cs115, 1, parent_state, 0);
+    set_node_probability(bn, cs115, 0, parent_state, 1-0);
     parent_state[cs110] = 0;
     parent_state[math105] = 1;
     parent_state[math110] = 1;
-    //==================p(cs115=1 | cs110=0, math105=1, math110=1) = 0.8===================== 
-    set_node_probability(bn, cs115, 1, parent_state, 0.8);
-    set_node_probability(bn, cs115, 0, parent_state, 1-0.8);
+    set_node_probability(bn, cs115, 1, parent_state, 0);
+    set_node_probability(bn, cs115, 0, parent_state, 1-0);
     parent_state[cs110] = 0;
     parent_state[math105] = 1;
     parent_state[math110] = 0;
-    //==================p(cs115=1 | cs110=0, math105=1, math110=0) = 0.8===================== 
-    set_node_probability(bn, cs115, 1, parent_state, 0.8);
-    set_node_probability(bn, cs115, 0, parent_state, 1-0.8);
+    set_node_probability(bn, cs115, 1, parent_state, 0);
+    set_node_probability(bn, cs115, 0, parent_state, 1-0);
     parent_state[cs110] = 0;
     parent_state[math105] = 0;
     parent_state[math110] = 1;
-    //==================p(cs115=1 | cs110=0, math105=0, math110=1) = 0.8===================== 
-    set_node_probability(bn, cs115, 1, parent_state, 0.8);
-    set_node_probability(bn, cs115, 0, parent_state, 1-0.8);
+    set_node_probability(bn, cs115, 1, parent_state, 0);
+    set_node_probability(bn, cs115, 0, parent_state, 1-0);
     parent_state[cs110] = 0;
     parent_state[math105] = 0;
     parent_state[math110] = 0;
-    //==================p(cs115=1 | cs110=0, math105=0, math110=0) = 0===================== 
     set_node_probability(bn, cs115, 1, parent_state, 0);
     set_node_probability(bn, cs115, 0, parent_state, 1-0);
 
 
-    //==================p(cs115 | cs110, cs100, engl100) CPT===================== 
-    /*parent_state.clear();
+    //==================p(cs270 | cs110, cs100, engl100) CPT===================== 
+    parent_state.clear();
     parent_state.add(cs110,1);
     parent_state.add(cs100, 1);
     parent_state.add(engl100, 1);
-    set_node_probability(bn, cs115, 1, parent_state, 0.8);
-    set_node_probability(bn, cs115, 0, parent_state, 1-0.8);
+    set_node_probability(bn, cs270, 1, parent_state, easy);
+    set_node_probability(bn, cs270, 0, parent_state, 1-easy);
     parent_state[cs110] = 1;
     parent_state[cs100] = 1;
     parent_state[engl100] = 0;
-    set_node_probability(bn, cs115, 1, parent_state, 0.8);
-    set_node_probability(bn, cs115, 0, parent_state, 1-0.8);
+    set_node_probability(bn, cs270, 1, parent_state, 0);
+    set_node_probability(bn, cs270, 0, parent_state, 1-0);
     parent_state[cs110] = 1;
     parent_state[cs100] = 0;
     parent_state[engl100] = 1;
-    set_node_probability(bn, cs115, 1, parent_state, 0.8);
-    set_node_probability(bn, cs115, 0, parent_state, 1-0.8);
+    set_node_probability(bn, cs270, 1, parent_state, easy);
+    set_node_probability(bn, cs270, 0, parent_state, 1-easy);
     parent_state[cs110] = 1;
     parent_state[cs100] = 0;
     parent_state[engl100] = 0;
-    set_node_probability(bn, cs115, 1, parent_state, 0.8);
-    set_node_probability(bn, cs115, 0, parent_state, 1-0.8);
+    set_node_probability(bn, cs270, 1, parent_state, easy);
+    set_node_probability(bn, cs270, 0, parent_state, 1-easy);
     parent_state[cs110] = 0;
     parent_state[cs100] = 1;
     parent_state[engl100] = 1;
-    set_node_probability(bn, cs115, 1, parent_state, 0.8);
-    set_node_probability(bn, cs115, 0, parent_state, 1-0.8);
+    set_node_probability(bn, cs270, 1, parent_state, easy);
+    set_node_probability(bn, cs270, 0, parent_state, 1-easy);
     parent_state[cs110] = 0;
     parent_state[cs100] = 1;
     parent_state[engl100] = 0;
-    set_node_probability(bn, cs115, 1, parent_state, 0.8);
-    set_node_probability(bn, cs115, 0, parent_state, 1-0.8);
+    set_node_probability(bn, cs270, 1, parent_state, 0);
+    set_node_probability(bn, cs270, 0, parent_state, 1-0);
     parent_state[cs110] = 0;
     parent_state[cs100] = 0;
     parent_state[engl100] = 1;
-    set_node_probability(bn, cs115, 1, parent_state, 0.8);
-    set_node_probability(bn, cs115, 0, parent_state, 1-0.8);
+    set_node_probability(bn, cs270, 1, parent_state, 0);
+    set_node_probability(bn, cs270, 0, parent_state, 1-0);
     parent_state[cs110] = 0;
     parent_state[cs100] = 0;
     parent_state[engl100] = 0;
-    set_node_probability(bn, cs115, 1, parent_state, 0);
-    set_node_probability(bn, cs115, 0, parent_state, 1-0);*/
+    set_node_probability(bn, cs270, 1, parent_state, 0);
+    set_node_probability(bn, cs270, 0, parent_state, 1-0);
 
+    //==================p(cs261 | math111, math122, cs110, cs115) CPT===================== 
+    parent_state.clear();
+    parent_state.add(math111,1);
+    parent_state.add(math122,1);
+    parent_state.add(cs110,1);
+    parent_state.add(cs115,1);
+    set_node_probability(bn, cs261, 1, parent_state, easy);
+    set_node_probability(bn, cs261, 0, parent_state, 1-easy);
+    parent_state[math111] = 1;
+    parent_state[math122] = 1;
+    parent_state[cs110] = 1;
+    parent_state[cs115] = 0;
+    set_node_probability(bn, cs261, 1, parent_state, easy);
+    set_node_probability(bn, cs261, 0, parent_state, 1-easy);
+    parent_state[math111] = 1;
+    parent_state[math122] = 1;
+    parent_state[cs110] = 0;
+    parent_state[cs115] = 1;
+    set_node_probability(bn, cs261, 1, parent_state, easy);
+    set_node_probability(bn, cs261, 0, parent_state, 1-easy);
+    parent_state[math111] = 1;
+    parent_state[math122] = 1;
+    parent_state[cs110] = 0;
+    parent_state[cs115] = 0;
+    set_node_probability(bn, cs261, 1, parent_state, 0);
+    set_node_probability(bn, cs261, 0, parent_state, 1-0);
+    parent_state[math111] = 1;
+    parent_state[math122] = 0;
+    parent_state[cs110] = 1;
+    parent_state[cs115] = 1;
+    set_node_probability(bn, cs261, 1, parent_state, 0);
+    set_node_probability(bn, cs261, 0, parent_state, 1-0);
+    parent_state[math111] = 1;
+    parent_state[math122] = 0;
+    parent_state[cs110] = 1;
+    parent_state[cs115] = 0;
+    set_node_probability(bn, cs261, 1, parent_state, 0);
+    set_node_probability(bn, cs261, 0, parent_state, 1-0);
+    parent_state[math111] = 1;
+    parent_state[math122] = 0;
+    parent_state[cs110] = 0;
+    parent_state[cs115] = 1;
+    set_node_probability(bn, cs261, 1, parent_state, 0);
+    set_node_probability(bn, cs261, 0, parent_state, 1-0);
+    parent_state[math111] = 1;
+    parent_state[math122] = 0;
+    parent_state[cs110] = 0;
+    parent_state[cs115] = 0;
+    set_node_probability(bn, cs261, 1, parent_state, 0);
+    set_node_probability(bn, cs261, 0, parent_state, 1-0);
+    parent_state[math111] = 0;
+    parent_state[math122] = 1;
+    parent_state[cs110] = 1;
+    parent_state[cs115] = 1;
+    set_node_probability(bn, cs261, 1, parent_state, 0);
+    set_node_probability(bn, cs261, 0, parent_state, 1-0);
+    parent_state[math111] = 0;
+    parent_state[math122] = 1;
+    parent_state[cs110] = 1;
+    parent_state[cs115] = 0;
+    set_node_probability(bn, cs261, 1, parent_state, 0);
+    set_node_probability(bn, cs261, 0, parent_state, 1-0);
+    parent_state[math111] = 0;
+    parent_state[math122] = 1;
+    parent_state[cs110] = 0;
+    parent_state[cs115] = 1;
+    set_node_probability(bn, cs261, 1, parent_state, 0);
+    set_node_probability(bn, cs261, 0, parent_state, 1-0);
+    parent_state[math111] = 0;
+    parent_state[math122] = 1;
+    parent_state[cs110] = 0;
+    parent_state[cs115] = 0;
+    set_node_probability(bn, cs261, 1, parent_state, 0);
+    set_node_probability(bn, cs261, 0, parent_state, 1-0);
+    parent_state[math111] = 0;
+    parent_state[math122] = 0;
+    parent_state[cs110] = 1;
+    parent_state[cs115] = 1;
+    set_node_probability(bn, cs261, 1, parent_state, 0);
+    set_node_probability(bn, cs261, 0, parent_state, 1-0);
+    parent_state[math111] = 0;
+    parent_state[math122] = 0;
+    parent_state[cs110] = 1;
+    parent_state[cs115] = 0;
+    set_node_probability(bn, cs261, 1, parent_state, 0);
+    set_node_probability(bn, cs261, 0, parent_state, 1-0);
+    parent_state[math111] = 0;
+    parent_state[math122] = 0;
+    parent_state[cs110] = 0;
+    parent_state[cs115] = 1;
+    set_node_probability(bn, cs261, 1, parent_state, 0);
+    set_node_probability(bn, cs261, 0, parent_state, 1-0);
+    parent_state[math111] = 0;
+    parent_state[math122] = 0;
+    parent_state[cs110] = 0;
+    parent_state[cs115] = 0;
+    set_node_probability(bn, cs261, 1, parent_state, 0);
+    set_node_probability(bn, cs261, 0, parent_state, 1-0);
+
+    //===========================p(cs280 | cs110, engl100) CPT========================== 
+    parent_state.clear();
+    parent_state.add(cs110,1);
+    parent_state.add(engl100,1);
+    set_node_probability(bn, cs280, 1, parent_state, easy);
+    set_node_probability(bn, cs280, 0, parent_state, 1-easy);
+    parent_state[cs110] = 1;
+    parent_state[engl100] = 0;
+    set_node_probability(bn, cs280, 1, parent_state, 0);
+    set_node_probability(bn, cs280, 0, parent_state, 1-0);
+    parent_state[cs110] = 0;
+    parent_state[engl100] = 1;
+    set_node_probability(bn, cs280, 1, parent_state, 0);
+    set_node_probability(bn, cs280, 0, parent_state, 1-0);
+    parent_state[cs110] = 0;
+    parent_state[engl100] = 0;
+    set_node_probability(bn, cs280, 1, parent_state, 0);
+    set_node_probability(bn, cs280, 0, parent_state, 1-0);
+
+    //===========================p(cs301 | cs201) CPT========================== 
+    parent_state.clear();
+    parent_state.add(cs201,1);
+    set_node_probability(bn, cs301, 1, parent_state, easy);
+    set_node_probability(bn, cs301, 0, parent_state, 1-easy);
+    parent_state[cs201] = 0;
+    set_node_probability(bn, cs301, 1, parent_state, 0);
+    set_node_probability(bn, cs301, 0, parent_state, 1-0);
+
+    //===========================p(cs203 | cs115) CPT========================== 
+    parent_state.clear();
+    parent_state.add(cs115,1);
+    set_node_probability(bn, cs203, 1, parent_state, easy);
+    set_node_probability(bn, cs203, 0, parent_state, 1-easy);
+    parent_state[cs115] = 0;
+    set_node_probability(bn, cs203, 1, parent_state, 0);
+    set_node_probability(bn, cs203, 0, parent_state, 1-0);
+
+    //===========================p(cs271 | cs110, cs270) CPT========================== 
+    parent_state.clear();
+    parent_state.add(cs110,1);
+    parent_state.add(cs270,1);
+    set_node_probability(bn, cs271, 1, parent_state, easy);
+    set_node_probability(bn, cs271, 0, parent_state, 1-easy);
+    parent_state[cs110] = 1;
+    parent_state[cs270] = 0;
+    set_node_probability(bn, cs271, 1, parent_state, 0);
+    set_node_probability(bn, cs271, 0, parent_state, 1-0);
+    parent_state[cs110] = 0;
+    parent_state[cs270] = 1;
+    set_node_probability(bn, cs271, 1, parent_state, 0);
+    set_node_probability(bn, cs271, 0, parent_state, 1-0);
+    parent_state[cs110] = 0;
+    parent_state[cs270] = 0;
+    set_node_probability(bn, cs271, 1, parent_state, 0);
+    set_node_probability(bn, cs271, 0, parent_state, 1-0);
 
     // We have now finished setting up our bayesian network.  So lets compute some 
     // probability values.  The first thing we will do is compute the prior probability
@@ -233,6 +414,7 @@ int bayesian_test(int x, int y)
     create_moral_graph(bn, join_tree);
     create_join_tree(join_tree, join_tree);
 
+
     // Now that we have a proper join_tree we can use it to obtain a solution to our
     // bayesian network.  Doing this is as simple as declaring an instance of
     // the bayesian_network_join_tree object as follows:
@@ -242,17 +424,21 @@ int bayesian_test(int x, int y)
     // now print out the probabilities for each node
     cout << "Using the join tree algorithm, prior:\n";
     cout << "p(cs110=1) = " << solution.probability(cs110)(1) << endl;
-    cout << "p(cs110=0) = " << solution.probability(cs110)(0) << endl;
     cout << "p(math105=1) = " << solution.probability(math105)(1) << endl;
-    cout << "p(math105=0) = " << solution.probability(math105)(0) << endl;
     cout << "p(math110=1) = " << solution.probability(math110)(1) << endl;
-    cout << "p(math110=0) = " << solution.probability(math110)(0) << endl;
     cout << "p(cs201=1) = " << solution.probability(cs201)(1) << endl;
-    cout << "p(cs201=0) = " << solution.probability(cs201)(0) << endl;
     cout << "p(cs207=1) = " << solution.probability(cs207)(1) << endl;
-    cout << "p(cs207=0) = " << solution.probability(cs207)(0) << endl;
     cout << "p(cs115=1) = " << solution.probability(cs115)(1) << endl;
-    cout << "p(cs115=0) = " << solution.probability(cs115)(0) << endl;
+    cout << "p(engl100=1) = " << solution.probability(engl100)(1) << endl;
+    cout << "p(cs100=1) = " << solution.probability(cs100)(1) << endl;
+    cout << "p(cs270=1) = " << solution.probability(cs270)(1) << endl;
+    cout << "p(math111=1) = " << solution.probability(math111)(1) << endl;
+    cout << "p(math122=1) = " << solution.probability(math122)(1) << endl;
+    cout << "p(cs261=1) = " << solution.probability(cs261)(1) << endl;
+    cout << "p(cs280=1) = " << solution.probability(cs280)(1) << endl;
+    cout << "p(cs301=1) = " << solution.probability(cs301)(1) << endl;
+    cout << "p(cs203=1) = " << solution.probability(cs203)(1) << endl;
+    cout << "p(cs271=1) = " << solution.probability(cs271)(1) << endl;
     cout << "\n\n\n";
 
 
@@ -262,6 +448,18 @@ int bayesian_test(int x, int y)
     // calls.
     set_node_value(bn, cs110, 1);
     set_node_as_evidence(bn, cs110);
+    set_node_value(bn, math105, 1);
+    set_node_as_evidence(bn, math105);
+    set_node_value(bn, math110, 0);
+    set_node_as_evidence(bn, math110);
+    set_node_value(bn, cs100, 1);
+    set_node_as_evidence(bn, cs100);
+    set_node_value(bn, engl100, 0);
+    set_node_as_evidence(bn, engl100);
+    set_node_value(bn, math111, 0);
+    set_node_as_evidence(bn, math111);
+    set_node_value(bn, math122, 0);
+    set_node_as_evidence(bn, math122);
 
     // Now we want to compute the probabilities of all the nodes in the network again
     // given that we now know that cs110 is 1.  We can do this as follows:
@@ -269,18 +467,22 @@ int bayesian_test(int x, int y)
 
     // now print out the probabilities for each node
     cout << "Using the join tree algorithm, post:\n";
-    cout << "p(cs110=1|cs110=1) = " << solution_with_evidence.probability(cs110)(1) << endl;
-    cout << "p(cs110=0|cs110=1) = " << solution_with_evidence.probability(cs110)(0) << endl;
-    cout << "p(math105=1|cs110=1) = " << solution_with_evidence.probability(math105)(1) << endl;
-    cout << "p(math105=0|cs110=1) = " << solution_with_evidence.probability(math105)(0) << endl;
-    cout << "p(math110=1|cs110=1) = " << solution_with_evidence.probability(math110)(1) << endl;
-    cout << "p(math110=0|cs110=1) = " << solution_with_evidence.probability(math110)(0) << endl;
-    cout << "p(cs201=1|cs110=1) = " << solution_with_evidence.probability(cs201)(1) << endl;
-    cout << "p(cs201=0|cs110=1) = " << solution_with_evidence.probability(cs201)(0) << endl;
-    cout << "p(cs207=1|cs110=1) = " << solution_with_evidence.probability(cs207)(1) << endl;
-    cout << "p(cs207=0|cs110=1) = " << solution_with_evidence.probability(cs207)(0) << endl;
-    cout << "p(cs115=1|cs110=1) = " << solution_with_evidence.probability(cs115)(1) << endl;
-    cout << "p(cs115=0|cs110=1) = " << solution_with_evidence.probability(cs115)(0) << endl;
+    cout << "p(cs110=1) = " << solution_with_evidence.probability(cs110)(1) << endl;
+    cout << "p(math105=1) = " << solution_with_evidence.probability(math105)(1) << endl;
+    cout << "p(math110=1) = " << solution_with_evidence.probability(math110)(1) << endl;
+    cout << "p(cs201=1) = " << solution_with_evidence.probability(cs201)(1) << endl;
+    cout << "p(cs207=1) = " << solution_with_evidence.probability(cs207)(1) << endl;
+    cout << "p(cs115=1) = " << solution_with_evidence.probability(cs115)(1) << endl;
+    cout << "p(engl100=1) = " << solution_with_evidence.probability(engl100)(1) << endl;
+    cout << "p(cs100=1) = " << solution_with_evidence.probability(cs100)(1) << endl;
+    cout << "p(cs270=1) = " << solution_with_evidence.probability(cs270)(1) << endl;
+    cout << "p(math111=1) = " << solution_with_evidence.probability(math111)(1) << endl;
+    cout << "p(math122=1) = " << solution_with_evidence.probability(math122)(1) << endl;
+    cout << "p(cs261=1) = " << solution_with_evidence.probability(cs261)(1) << endl;
+    cout << "p(cs280=1) = " << solution_with_evidence.probability(cs280)(1) << endl;
+    cout << "p(cs301=1) = " << solution_with_evidence.probability(cs301)(1) << endl;
+    cout << "p(cs203=1) = " << solution_with_evidence.probability(cs203)(1) << endl;
+    cout << "p(cs271=1) = " << solution_with_evidence.probability(cs271)(1) << endl;
     cout << "\n\n\n";
 
     // Note that when we made our solution_with_evidence object we reused our join_tree object.
