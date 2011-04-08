@@ -22,6 +22,8 @@ struct simple_request {
   char name[1];
 };
 
+char* bayesian_result;
+
 static Handle<Value> DoSomethingAsync (const Arguments& args) {
   HandleScope scope;
   const char *usage = "usage: doSomething(x, y, name, cb)";
@@ -54,7 +56,8 @@ static int DoSomething (eio_req *req) {
   struct simple_request * sr = (struct simple_request *)req->data;
   //sleep(2); // just to make it less pointless to be async.
   //req->result = sr->x + sr->y;
-  req->result = bayesian_test(sr->x, sr->y);
+  //req->result = bayesian_test(sr->x, sr->y, sr->name);
+  bayesian_result = bayesian_test(sr->x, sr->y, sr->name);
   return 0;
 }
 
@@ -67,7 +70,8 @@ static int DoSomething_After (eio_req *req) {
   struct simple_request * sr = (struct simple_request *)req->data;
   Local<Value> argv[3];
   argv[0] = Local<Value>::New(Null()); //cb(er)
-  argv[1] = Integer::New(req->result); //cb(res)
+  //argv[1] = String::New(req->result); //cb(res)
+  argv[1] = String::New(bayesian_result); //cb(res)
   argv[2] = String::New(sr->name); //cb(n)
   TryCatch try_catch;
   sr->cb->Call(Context::GetCurrent()->Global(), 3, argv);

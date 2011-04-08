@@ -3,6 +3,7 @@
 #include "dlib/graph.h"
 #include "dlib/directed_graph.h"
 #include <iostream>
+#include <cstring>
 	
 
 using namespace dlib;
@@ -14,7 +15,7 @@ const float middle = 0.7;
 const float hard = 0.6;
 
 // ----------------------------------------------------------------------------------------
-int bayesian_test(int x, int y)
+char* bayesian_test(int x, int y, char * passed_courses)
 {
     // There are many useful convenience functions in this namespace.  They all
     // perform simple access or modify operations on the nodes of a bayesian network. 
@@ -50,6 +51,12 @@ int bayesian_test(int x, int y)
 		cs203 = 14,
 		cs271 = 15
     };
+
+	/*char * pch;
+	pch = strstr (passed_courses, "10");
+	if (pch != NULL) {
+		cout<<"Sucess is closed!!!!"<<endl;
+	}*/
 
     // The next few blocks of code setup our bayesian network.
 
@@ -446,20 +453,103 @@ int bayesian_test(int x, int y)
     // node really has a value of 1.  That is to say, we now have evidence that 
     // cs110 is 1.  We can represent this in the network using the following two function
     // calls.
-    set_node_value(bn, cs110, 1);
-    set_node_as_evidence(bn, cs110);
-    set_node_value(bn, math105, 1);
-    set_node_as_evidence(bn, math105);
-    set_node_value(bn, math110, 0);
-    set_node_as_evidence(bn, math110);
-    set_node_value(bn, cs100, 1);
-    set_node_as_evidence(bn, cs100);
-    set_node_value(bn, engl100, 0);
-    set_node_as_evidence(bn, engl100);
-    set_node_value(bn, math111, 0);
-    set_node_as_evidence(bn, math111);
-    set_node_value(bn, math122, 0);
-    set_node_as_evidence(bn, math122);
+	/*  cs110 = 0,
+        cs201 = 1,
+        cs207 = 2,
+        cs115 = 3,
+		math105 = 4,
+		math110 = 5,
+		cs270 = 6,
+		cs100 = 7,
+		engl100 = 8,
+		math122 = 9,
+		math111 = 10,
+		cs261 = 11,
+		cs280 = 12,
+		cs301 = 13,
+		cs203 = 14,
+		cs271 = 15 */
+
+	//set leaf nodes to be 0:
+	set_node_value(bn, cs110, 0);
+	set_node_as_evidence(bn, cs110);
+	set_node_value(bn, cs100, 0);
+	set_node_as_evidence(bn, cs100);
+	set_node_value(bn, engl100, 0);
+	set_node_as_evidence(bn, engl100);
+	set_node_value(bn, math105, 0);
+	set_node_as_evidence(bn, math105);
+	set_node_value(bn, math110, 0);
+	set_node_as_evidence(bn, math110);
+	set_node_value(bn, math111, 0);
+	set_node_as_evidence(bn, math111);
+	set_node_value(bn, math122, 0);
+	set_node_as_evidence(bn, math122);
+
+	if (strstr(passed_courses, "-0-") != NULL) {
+		set_node_value(bn, cs110, 1);
+		set_node_as_evidence(bn, cs110);
+	}
+	if (strstr(passed_courses, "-1-") != NULL) {
+		set_node_value(bn, cs201, 1);
+		set_node_as_evidence(bn, cs201);
+	}
+	if (strstr(passed_courses, "-2-") != NULL) {
+		set_node_value(bn, cs207, 1);
+		set_node_as_evidence(bn, cs207);
+	}
+	if (strstr(passed_courses, "-3-") != NULL) {
+		set_node_value(bn, cs115, 1);
+		set_node_as_evidence(bn, cs115);
+	}
+	if (strstr(passed_courses, "-4-") != NULL) {
+		set_node_value(bn, math105, 1);
+		set_node_as_evidence(bn, math105);
+	}
+	if (strstr(passed_courses, "-5-") != NULL) {
+		set_node_value(bn, math110, 1);
+		set_node_as_evidence(bn, math110);
+	}
+	if (strstr(passed_courses, "-6-") != NULL) {
+		set_node_value(bn, cs270, 1);
+		set_node_as_evidence(bn, cs270);
+	}
+	if (strstr(passed_courses, "-7-") != NULL) {
+		set_node_value(bn, cs100, 1);
+		set_node_as_evidence(bn, cs100);
+	}
+	if (strstr(passed_courses, "-8-") != NULL) {
+		set_node_value(bn, engl100, 1);
+		set_node_as_evidence(bn, engl100);
+	}
+	if (strstr(passed_courses, "-9-") != NULL) {
+		set_node_value(bn, math122, 1);
+		set_node_as_evidence(bn, math122);
+	}
+	if (strstr(passed_courses, "-10-") != NULL) {
+		set_node_value(bn, math111, 1);
+		set_node_as_evidence(bn, math111);
+	}
+	if (strstr(passed_courses, "-11-") != NULL) {
+		set_node_value(bn, cs261, 1);
+		set_node_as_evidence(bn, cs261);
+	}
+	if (strstr(passed_courses, "-12-") != NULL) {
+		set_node_value(bn, cs280, 1);
+		set_node_as_evidence(bn, cs280);
+	}
+	if (strstr(passed_courses, "-13-") != NULL) {
+		set_node_value(bn, cs301, 1);
+		set_node_as_evidence(bn, cs301);
+	}
+	if (strstr(passed_courses, "-14-") != NULL) {
+		set_node_value(bn, cs203, 1);
+		set_node_as_evidence(bn, cs203);
+	}
+	if (strstr(passed_courses, "-15-") != NULL) {
+		set_node_value(bn, cs271, 1);
+		set_node_as_evidence(bn, cs271);
+	}
 
     // Now we want to compute the probabilities of all the nodes in the network again
     // given that we now know that cs110 is 1.  We can do this as follows:
@@ -493,7 +583,33 @@ int bayesian_test(int x, int y)
     // all we did was change the value of a bayes_node object (we made node cs110 be evidence)
     // so we are ok.
 
-    return x+y;
+	//cout<<passed_courses<<endl;
+	ostringstream result_str;
+	result_str << "{ cs110:" 
+		<< solution_with_evidence.probability(cs110)(1) << ", "
+		<< "math105:" << solution_with_evidence.probability(math105)(1)<< ", "
+		<< "math110:" << solution_with_evidence.probability(math110)(1)<< ", "
+		<< "cs201:" << solution_with_evidence.probability(cs201)(1)<< ", "
+		<< "cs207:" << solution_with_evidence.probability(cs207)(1)<< ", "
+		<< "cs115:" << solution_with_evidence.probability(cs115)(1)<< ", "
+		<< "engl100:" << solution_with_evidence.probability(engl100)(1)<< ", "
+		<< "cs100:" << solution_with_evidence.probability(cs100)(1)<< ", "
+		<< "cs270:" << solution_with_evidence.probability(cs270)(1)<< ", "
+		<< "math111:" << solution_with_evidence.probability(math111)(1)<< ", "
+		<< "math122:" << solution_with_evidence.probability(math122)(1)<< ", "
+		<< "cs261:" << solution_with_evidence.probability(cs261)(1)<< ", "
+		<< "cs280:" << solution_with_evidence.probability(cs280)(1)<< ", "
+		<< "cs301:" << solution_with_evidence.probability(cs301)(1)<< ", "
+		<< "cs203:" << solution_with_evidence.probability(cs203)(1)<< ", "
+		<< "cs271:" << solution_with_evidence.probability(cs271)(1)
+		<< "}";
+	//cout<< result_str.str()<<endl;
+	//ostringstream s;
+	//s << 123791842.5;
+	//cout<<s.str()<<endl;
+	char aCString[5000]; 
+	strcpy(aCString, result_str.str().c_str());	
+    return aCString;
 }
 
 
