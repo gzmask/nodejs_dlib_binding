@@ -1,3 +1,5 @@
+Require Node.js
+
 Require npm packages:
 	express, ejs
 
@@ -7,29 +9,3 @@ To run:
 Everytime linkage changes:
 	rm -rf build
 
-micheil: iirc, that signature is (error, last_result, next), gzmask
-[11:10pm] gzmask: micheil: thanks, I am trying to locate these three parameters in nas.cc but couldn't found it. I guess it's pre-define in the libbraries?
-[11:10pm] micheil: the callback function happens after everything
-[11:10pm] micheil: https://github.com/isaacs/node-async-simple/blob/master/nas.cc#L62-66
-[11:10pm] micheil: is where those arguments come from
-[11:12pm] gzmask: micheil: what does the parameter 'next' mean?
-[11:13pm] micheil: gzmask: sorry, I named them wrong there, I thought you meant one of isaac's flow control libs
-[11:13pm] micheil: n in this case is the name, so argument three
-[11:13pm] micheil: so,
-[11:14pm] micheil: nas.doSomething(x, y, name, callback) -> callback(null, x + y, name)
-[11:14pm] micheil: that's what you'll get.
-[11:15pm] micheil: doing a simple addition like this has no error case, so the first argument to the callback (error, or err, by default) will always be null
-[11:15pm] micheil: arguments 1..N will be variable.
-[11:15pm] micheil: in this case, the DoSomething_After has defined that the second argument will be the result, and the third the name
-[11:16pm] micheil: (these were initially assigned to our request object
-[11:16pm] micheil: req->x = arg[0], req->y = arg[1], req->name = arg[2], req->cb = arg[3]
-[11:16pm] micheil: more or less.
-[11:17pm] micheil: using the libeio eio_custom call means the following:
-[11:17pm] micheil: - you have a function that starts the operation (enqueues it for processing)
-[11:17pm] micheil: - you have a function that does the processing
-[11:18pm] micheil: - you have a function that gets called after the processing has happened
-[11:19pm] micheil: a suggested naming scheme is:
-[11:19pm] micheil: 1. FunctionName
-[11:19pm] micheil: 2. FunctionName_handler
-[11:19pm] micheil: 3. FunctionName_after
-[11:20pm] micheil: gzmask: I should really write a tutorial for it or something, but I haven't.

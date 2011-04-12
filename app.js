@@ -24,29 +24,22 @@ app.configure(function(){
 });
 
 app.get('/', function(req, res){
-	bayesian.doSomething(2, 4, "hello", function (error, result, name) {
-		console.log("js "+(Date.now() - start), error, result, name);
-		res.send("js " + (Date.now() - start) + error + result + name);
-	});
+	res.render('index', {locals:{ title: 'index page'}});
 });
 
-app.get('/names', function(req, res){
-	res.render('names', {locals:{ names:['foo','bar','baz']}});
+app.get('/index', function(req, res){
+	res.render('index', {locals:{ title: 'index page'}});
 });
 
 //outputs the query form
-app.get('/index', function(req, res){
-	res.render('index');
+app.get('/evidence/new', function(req, res){
+	res.render('evidence_new');
 });
 
 //get the student's feedback, sent to bayesian network, render output
 app.post('/evidence', function(req, res){
 	//console.log(req.body.user); //{ name: 'ray', email: 'ray.lei@uregina.ca' }
 	console.log(req.body); //user: { name: 'ray', email: 'gzmask@gmail.com' } }
-	req.body.passed_course.push('-end');
-	req.body.passed_course.reverse();
-	req.body.passed_course.push('start-');
-	req.body.passed_course.reverse();
 	var passed_courses = req.body.passed_course.join("-");
 	bayesian.doSomething(req.body.user.x, req.body.user.y, passed_courses, function (error, result, name) {
 		//console.log("js "+(Date.now() - start), error, result, name);

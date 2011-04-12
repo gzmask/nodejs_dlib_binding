@@ -603,6 +603,7 @@ char* bayesian_test(int x, int y, char * passed_courses)
 		<< "cs203:" << solution_with_evidence.probability(cs203)(1)<< ", "
 		<< "cs271:" << solution_with_evidence.probability(cs271)(1)
 		<< "}";
+	cout<<"bayes_net.cpp:"<<passed_courses<<endl;
 	//cout<< result_str.str()<<endl;
 	//ostringstream s;
 	//s << 123791842.5;
