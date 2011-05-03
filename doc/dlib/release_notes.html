@@ -1,0 +1,648 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="verify-v1" content="02MiiaFNVzS5/u0eQhsy3/knioFHsia1X3DXRpHkE6I=">
+<meta name="google-site-verification" content="DGSSJMKDomaDaDTIRJ8jDkv0YMx9Cz7OESbXHjjr6Jw">
+<title>dlib C++ Library
+               - Release notes</title>
+<script language="JavaScript">
+
+            // ---------------------------------------------
+            // --- Name:    Easy DHTML Treeview           --
+            // --- Author:  D.D. de Kerf                  --
+            // --- Version: 0.2          Date: 13-6-2001  --
+            // ---------------------------------------------
+            function Toggle(node)
+            {
+               // Unfold the branch if it isn't visible
+               var next_node = node.nextSibling;
+               if (next_node.style.display == 'none')
+               {
+                  // Change the image (if there is an image)
+                  if (node.childNodes.length > 0)
+                  {
+                     if (node.childNodes.length > 0)
+                     { 
+                        if (node.childNodes.item(0).nodeName == "IMG")
+                        {
+                           node.childNodes.item(0).src = "minus.gif";
+                        }
+                     }
+                  }
+
+                  next_node.style.display = 'block';
+               }
+               // Collapse the branch if it IS visible
+               else
+               {
+                  // Change the image (if there is an image)
+                  if (node.childNodes.length > 0)
+                  {
+                     if (node.childNodes.length > 0)
+                     { 
+                        if (node.childNodes.item(0).nodeName == "IMG")
+                        {
+                           node.childNodes.item(0).src = "plus.gif";
+                        }
+                     }
+                  }
+
+                  next_node.style.display = 'none';
+               }
+
+            }
+            function BigToggle(node)
+            {
+               // Unfold the branch if it isn't visible
+               var next_node = node.nextSibling;
+               if (next_node.style.display == 'none')
+               {
+                  // Change the image (if there is an image)
+                  if (node.childNodes.length > 0)
+                  {
+                     if (node.childNodes.length > 0)
+                     { 
+                        if (node.childNodes.item(0).nodeName == "IMG")
+                        {
+                           node.childNodes.item(0).src = "bigminus.gif";
+                        }
+                     }
+                  }
+
+                  next_node.style.display = 'block';
+               }
+               // Collapse the branch if it IS visible
+               else
+               {
+                  // Change the image (if there is an image)
+                  if (node.childNodes.length > 0)
+                  {
+                     if (node.childNodes.length > 0)
+                     { 
+                        if (node.childNodes.item(0).nodeName == "IMG")
+                        {
+                           node.childNodes.item(0).src = "bigplus.gif";
+                        }
+                     }
+                  }
+
+                  next_node.style.display = 'none';
+               }
+
+            }
+            </script><style type="text/css">
+               body {margin:0px;}
+               pre {margin:0px;}
+
+               ul.tree  li { list-style: none;  margin-left:10px;} 
+               ul.tree  { margin:0px; padding:0px; margin-left:5px; font-size:0.95em; }
+               ul.tree  li ul { margin-left:10px; padding:0px; }
+
+               div#component {
+                  background-color:white; 
+                  border: 2px solid rgb(102,102,102); 
+                  text-align:left;
+                  margin-top: 1.5em;
+                  padding: 0.7em;
+               }
+
+               div#function {
+                  background-color:white; 
+                  border: 2px solid rgb(102,102,255); 
+                  text-align:left;
+                  margin-top: 0.3em;
+                  padding: 0.3em;
+               }
+
+               div#class {
+                  background-color:white; 
+                  border: 2px solid rgb(255,102,102); 
+                  text-align:left;
+                  margin-top: 0.3em;
+                  padding: 0.3em;
+               }
+
+               div#extension {
+                  background-color:#FDFDFD; 
+                  border: 1px solid rgb(102,102,102); 
+                  text-align:left;
+                  margin-top: 1.0em;
+                  padding: 0.7em;
+               }
+
+               div#logb {
+                  text-align:left;
+                  padding: 0.0em;
+                  float: left;
+                  background-color:#c0c0c0; 
+                  border: double ; 
+                  margin: 0.5em;
+               }
+
+               .bdotted {border-bottom: 1px dotted}
+               .bdashed {border-bottom: 1px dashed}
+               .bsolid {border-bottom: 1px solid}
+               .bdouble {border-bottom: 1px double}
+               .bgroove {border-bottom: 1px groove}
+               .bridge {border-bottom: 1px ridge}
+               .binset {border-bottom: 1px inset}
+               .boutset {border-bottom: 1px outset}
+
+               div#row1 {
+                  background-color:#dfdfdf; 
+               }
+               div#row2 {
+                  background-color:#f2f2f2; 
+               }
+
+               div#typedefs {
+                  margin-left: 1.5em;
+                  margin-top: 0.2em;
+                  border: 1px dotted;
+                  width: 52em;
+               }
+
+               div#tdn {
+                  width: 10em;
+               }
+
+               .fullhr {
+                  clear: both;
+               }
+
+               body {
+                  text-align: center;
+               }
+
+               div#entire_page {
+                  width:62.5em;  
+                  text-align: left;
+                  margin-top: 0.4em;
+                  margin-left: auto;
+                  margin-right: auto;
+               }
+            </style>
+</head>
+<body bgcolor="#EDF3EE">
+<a name="top"></a><div id="entire_page"><table bgcolor="white" height="100%" bordercolor="#EDF3EE" CELLSPACING="0" CELLPADDING="10"><tr height="100%">
+<td BGCOLOR="#F5F5F5" style="padding:7px; border: 1px solid rgb(102,102,102);" VALIGN="TOP" height="100%">
+<br><table WIDTH="145" height="100%">
+<tr>
+<td VALIGN="TOP">
+      <b>The Library</b><ul class="tree">
+<li><a href="algorithms.html">Algorithms</a></li>
+<li><a href="api.html">API Wrappers</a></li>
+<li><a href="bayes.html">Bayesian Nets</a></li>
+<li><a href="compression.html">Compression</a></li>
+<li><a href="containers.html">Containers</a></li>
+<li><a href="imaging.html">Image Processing</a></li>
+<li><a href="ml.html">Machine Learning</a></li>
+<li><a href="metaprogramming.html">Metaprogramming</a></li>
+<li><a href="other.html">Miscellaneous</a></li>
+<li><a href="network.html">Networking</a></li>
+<li><a href="optimization.html">Optimization</a></li>
+<li><a href="parsing.html">Parsing</a></li>
+</ul>
+<br>
+ 
+
+      <b>Help/Info</b><ul class="tree">
+<li>
+<a onclick="Toggle(this)" style="cursor: pointer;margin-left:-9px"><img src="plus.gif"><font color="green"><u>Examples</u></font></a><ul style="display:none;">
+<li><a href="file_to_code_ex.cpp.html">Base64_Encoder</a></li>
+<li><a href="bayes_net_ex.cpp.html">Bayesian_Network</a></li>
+<li><a href="bayes_net_from_disk_ex.cpp.html">Bayesian_Network_From_Disk</a></li>
+<li><a href="bayes_net_gui_ex.cpp.html">Bayesian_Network_GUI</a></li>
+<li><a href="compress_stream_ex.cpp.html#_top">Cmd_Line_Parser</a></li>
+<li><a href="compress_stream_ex.cpp.html">Compress_Stream</a></li>
+<li><a href="config_reader_ex.cpp.html">Config_File_Reader</a></li>
+<li><a href="custom_trainer_ex.cpp.html">Custom_Trainers</a></li>
+<li><a href="dir_nav_ex.cpp.html">Directory_Navigation</a></li>
+<li><a href="empirical_kernel_map_ex.cpp.html">Empirical_Kernel_Map</a></li>
+<li><a href="gui_api_ex.cpp.html">GUI</a></li>
+<li><a href="server_http_ex.cpp.html">HTTP_Server</a></li>
+<li><a href="image_ex.cpp.html">Image</a></li>
+<li><a href="kcentroid_ex.cpp.html">Kernel_Centroid</a></li>
+<li><a href="kkmeans_ex.cpp.html">Kernel_K-Means_Clustering</a></li>
+<li><a href="krr_regression_ex.cpp.html">Kernel_Ridge_Regression</a></li>
+<li><a href="krls_filter_ex.cpp.html">Kernel_RLS_Filtering</a></li>
+<li><a href="krls_ex.cpp.html">Kernel_RLS_Regression</a></li>
+<li><a href="krr_classification_ex.cpp.html">KRR_Classification</a></li>
+<li><a href="linear_manifold_regularizer_ex.cpp.html">Linear_Manifold_Regularizer</a></li>
+<li><a href="logger_ex.cpp.html">Logger</a></li>
+<li><a href="logger_ex_2.cpp.html">Logger_Advanced</a></li>
+<li><a href="matrix_ex.cpp.html">Matrix</a></li>
+<li><a href="matrix_expressions_ex.cpp.html">Matrix_Expressions</a></li>
+<li><a href="member_function_pointer_ex.cpp.html">Member_Function_Pointer</a></li>
+<li><a href="model_selection_ex.cpp.html">Model_Selection</a></li>
+<li><a href="multiclass_classification_ex.cpp.html">Multiclass_Classification</a></li>
+<li><a href="multithreaded_object_ex.cpp.html">Multithreaded_Object</a></li>
+<li><a href="mlp_ex.cpp.html">Neural_Network</a></li>
+<li><a href="least_squares_ex.cpp.html">Non-Linear Least Squares</a></li>
+<li><a href="svm_pegasos_ex.cpp.html">Online_SVM</a></li>
+<li><a href="optimization_ex.cpp.html">Optimization</a></li>
+<li><a href="pipe_ex.cpp.html">Pipe</a></li>
+<li><a href="pipe_ex_2.cpp.html">Pipe_2</a></li>
+<li><a href="quantum_computing_ex.cpp.html">Quantum_Computing</a></li>
+<li><a href="queue_ex.cpp.html">Queue</a></li>
+<li><a href="rank_features_ex.cpp.html">Rank_Features</a></li>
+<li><a href="rvm_ex.cpp.html">Relevance_Vector_Classification</a></li>
+<li><a href="rvm_regression_ex.cpp.html">Relevance_Vector_Regression</a></li>
+<li><a href="sockets_ex.cpp.html">Sockets</a></li>
+<li><a href="sockets_ex_2.cpp.html">Sockets_2</a></li>
+<li><a href="sockstreambuf_ex.cpp.html">Sockstreambuf</a></li>
+<li><a href="svm_sparse_ex.cpp.html">Sparse_Vectors</a></li>
+<li><a href="std_allocator_ex.cpp.html">Std_C++_Allocator</a></li>
+<li><a href="svm_ex.cpp.html">Support_Vector_Machine</a></li>
+<li><a href="svr_ex.cpp.html">Support_Vector_Regression</a></li>
+<li><a href="surf_ex.cpp.html">SURF</a></li>
+<li><a href="threaded_object_ex.cpp.html">Threaded_Object</a></li>
+<li><a href="threads_ex.cpp.html">Threads</a></li>
+<li><a href="thread_function_ex.cpp.html">Thread_Function</a></li>
+<li><a href="thread_pool_ex.cpp.html">Thread_Pool</a></li>
+<li><a href="timer_ex.cpp.html">Timer</a></li>
+<li><a href="xml_parser_ex.cpp.html">XML_Parser</a></li>
+</ul>
+</li>
+<li><a href="index.html">Home</a></li>
+<li><a href="compile.html">How to compile</a></li>
+<li><a href="howto_contribute.html">How to contribute</a></li>
+<li><a href="term_index.html">Index</a></li>
+<li><a href="intro.html">Introduction</a></li>
+<li><a href="license.html">License</a></li>
+<li><a href="books.html">Suggested Books</a></li>
+</ul>
+<br>
+ 
+      <b>Current Release</b><ul class="tree">
+<li><a href="change_log.html">Change Log</a></li>
+<li><a href="release_notes.html">Release Notes</a></li>
+<li>Version: 17.36</li>
+</ul>
+<br>
+
+
+      
+    </td>
+<td width="1"></td>
+</tr>
+<tr><td valign="bottom">
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      
+      Last Modified:<br>
+      Mar 02, 2011
+      <br>
+      <br>
+   </td></tr>
+</table>
+</td>
+<td VALIGN="TOP" width="100%" style="border: 1px solid rgb(102,102,102);">
+<center><h1>Release notes</h1></center>
+
+
+<h1 style="margin:0px;">Release 17.36</h1>
+<u>Release date</u>: Mar 02, 2011<br><u>Major Changes in this Release</u>:
+            <table cellspacing="5" cellpadding="0" width="100%"><tr>
+<td width="15"></td>
+<td><pre>
+New Stuff:
+   - Added an implementation of the Hungarian algorithm for solving the optimal 
+     assignment problem (in the new max_cost_assignment() routine).
+ 
+Non-Backwards Compatible Changes:
+
+Bug fixes:
+   - Fixed a problem which prevented the any_function unit test from compiling 
+     in visual studio 2008.
+
+Other:
+   - Changed the oca optimizer so that it warm starts the QP subproblem
+     rather than resolving it from scratch during each iteration. This 
+     improves the speed and stability of the algorithm.
+</pre></td>
+</tr></table>
+<hr>
+<h1 style="margin:0px;">Release 17.35</h1>
+<u>Release date</u>: Feb 10, 2011<br><u>Major Changes in this Release</u>:
+            <table cellspacing="5" cellpadding="0" width="100%"><tr>
+<td width="15"></td>
+<td><pre>
+New Stuff:
+   - Added the rr_trainer.  It is a version of krr_trainer which is optimized
+     for use with the linear_kernel.
+   - Added the approximate_distance_function() routine.  It is the core optimizer
+     behind the reduced2() trainer adapter.  
+   - Added an any_function which supports the same functionality as std::function 
+     from the upcoming C++0x standard.  I added this so dlib can be modified to 
+     easily support lambda functions while still being compilable with compilers 
+     which don't support the new std::function.
+   - Added overloads of all the GUI event handlers so you can use general functions 
+     as callbacks (via any_function).  This way, if you have a C++0x compiler, you 
+     can use lambda functions with the event handlers.
+   - Added the split() function for splitting up strings.
+ 
+Non-Backwards Compatible Changes:
+   - Improved the distance_function object by turning it into a properly 
+     encapsulated class rather than just a simple struct.  I also added 
+     overloaded +, -, *, and / operators for this object so you can do the 
+     kind of arithmetic you would expect on an object which represents a 
+     point in a vector space.  This breaks backwards compatibility with 
+     the previous interface though as the member variables are now private.
+
+Bug fixes:
+   - Fixed a compile-time error in the kernel_matrix().
+   - Fixed a bug in an assert in the spatially_filter_image() function.
+   - Applied a patch from Nils Labugt which fixes a runtime bug in the gui_core 
+     component.  The bug caused a crash when using X11 and Ubuntu 10.10 in
+     certain cases.
+   - Updated code so that it compiles with the clang compiler.
+
+Other:
+   - Updated the image_display widget so you can zoom in and out using the 
+     mouse wheel.
+</pre></td>
+</tr></table>
+<hr>
+<h1 style="margin:0px;">Release 17.34</h1>
+<u>Release date</u>: Jan 03, 2011<br><u>Major Changes in this Release</u>:
+            <table cellspacing="5" cellpadding="0" width="100%"><tr>
+<td width="15"></td>
+<td><pre>
+New Stuff:
+   - General Stuff 
+      - Added the promote template
+      - Added the basic_type template
+      - Added the assign_image_scaled() function
+      - Added the unordered_pair object.
+      - Added the symmetric_matrix_cache() function
+      - Added two new quadratic program solvers.  The solve_qp2_using_smo
+        and solve_qp3_using_smo objects.
+
+   - Machine Learning Stuff
+      - Added the svm_c_trainer object.  It implements C-SVM classification and
+        allows the user to set different C values for each class.
+      - Added the svm_one_class_trainer object. 
+      - Added the svr_trainer object.  It implements epsilon-insensitive
+        support vector regression.
+      - Added two new any objects.  The any_decision_function for containing 
+        decision function style objects and the any_trainer for trainers.
+      - Added cross_validate_regression_trainer()
+      - Added test_regression_function()
+      - Added the probabilistic() function.  It is a trainer adapter that
+        simply calls train_probabilistic_decision_function().
+      - Added tools for multiclass classification 
+         - Added one_vs_one_trainer
+         - Added one_vs_all_trainer
+         - Added cross_validate_multiclass_trainer()
+         - Added test_multiclass_decision_function()
+ 
+Non-Backwards Compatible Changes:
+  - invalid_svm_nu_error has been renamed to invalid_nu_error.
+  - Changed the pixel_traits so that signed grayscale pixel types are allowed.  
+    This involved adding a few new fields to pixel_traits.  I also changed the 
+    get_pixel_intensity() function so that its return value is of the same type 
+    as the basic pixel type rather than always being unsigned long.
+  - Removed the kernel_type typedef from the normalized function since this
+    meta-object should be capable of working with non-kernel decision functions.
+  - train_probabilistic_decision_function() no longer accepts column vectors of 
+    samples and labels.  Now it only accepts std::vectors of samples and labels.  
+
+Bug fixes:
+  - Fixed a bug in the deserialization code for the sparse kernels.  The bug
+    prevented code which used the deserialize() routine from compiling.
+
+Other:
+  - Changed the image display GUI widgets to use the assign_image_scaled() 
+    function internally.  Now they will accept just about any image and 
+    do the right thing.
+  - Modified the type_safe_union so that you can call apply_to_contents() on const
+    type_safe_unions.
+  - Added serialization support for std::pair objects.
+  - Made the train_probabilistic_decision_function() more general by making it work 
+    with any kind of trainer object rather than only ones which produce 
+    dlib::decision_function objects.  I also made it work with trainers that only 
+    take std::vectors.
+  - Added overloads to the config_reader's methods to allow it to load directly 
+    from a file name given as a string in addition to taking istream objects.
+</pre></td>
+</tr></table>
+<hr>
+<h1 style="margin:0px;">Release 17.33</h1>
+<u>Release date</u>: Dec 05, 2010<br><u>Major Changes in this Release</u>:
+            <table cellspacing="5" cellpadding="0" width="100%"><tr>
+<td width="15"></td>
+<td><pre>
+New Stuff:
+  - Added the ability to add/subtract scalar values to/from all the elements 
+    of a matrix using the - and + operators.
+  - Added a trust region optimizer. 
+  - Added Levenberg-Marquardt and LM/quasi-newton hybrid methods for solving
+    non-linear least squares problems.
+  - Added an any container object.
+
+Non-Backwards Compatible Changes:
+
+Bug fixes:
+  - Fixed a compiler warning and also a runtime bug in sort_basis_vectors().  
+    The bug triggered when all the basis vectors were included in the final
+    answer.
+
+Other:
+  - Added a bunch of overloads to catch operations on diagonal matrices
+    and use more efficient code paths for them.  For example, inv(diagm(d))
+    turns into diagm(reciprocal(d)).  Multiplication by a diagonal matrix
+    is now also handled efficiently.
+
+</pre></td>
+</tr></table>
+<hr>
+<h1 style="margin:0px;">Release 17.32</h1>
+<u>Release date</u>: Nov 13, 2010<br><u>Major Changes in this Release</u>:
+            <table cellspacing="5" cellpadding="0" width="100%"><tr>
+<td width="15"></td>
+<td><pre>
+New Stuff:
+  - Added a class for reading JPEG image files.
+  - Added scale_rows(), flipud() and fliplr() matrix functions.
+  - Added console_progress_indicator.  It is a tool for measuring how long a 
+    task will take.
+  - Added sort_basis_vectors().  It is a function for performing supervised 
+    basis selection.
+
+Non-Backwards Compatible Changes:
+   - Renamed the linearly_independent_subset_finder's dictionary_size() member 
+     function to size().  This way, linearly_independent_subset_finder objects 
+     can be used in many templated functions which expect objects which look 
+     like arrays. 
+
+Bug fixes:
+  - Changed the assert macros so that they don't use __PRETTY_FUNCTION__
+    with gcc 4.4.5 since, on Ubuntu at least, this version of gcc segfaults
+    when __PRETTY_FUNCTION__ is used within certain template constructs.
+  - Improved the alias detection capability of kernel_matrix() expressions.  
+    Now statements of the form: sample = kernel_matrix(kern, *, sample) can 
+    be used since the aliasing of sample will be handled.
+
+Other:
+  - Generally tried to make things more usable.
+  - Optimized matrix expressions such as mat*diagm(vect)
+  - Made the code in chol() more robust to indefinite matrices.
+
+</pre></td>
+</tr></table>
+<hr>
+<h1 style="margin:0px;">Release 17.31</h1>
+<u>Release date</u>: Sep 15, 2010<br><u>Major Changes in this Release</u>:
+            <table cellspacing="5" cellpadding="0" width="100%"><tr>
+<td width="15"></td>
+<td><pre>
+New Stuff:
+   - Added the running_scalar_covariance object.
+   - All the matrix decomposition routines now use LAPACK when DLIB_USE_LAPACK
+     is #defined.   
+
+Non-Backwards Compatible Changes:
+   - Removed the dlib::EOTHER constant since it conflicts with visual
+     studio 2010.
+   - Changed the svd functions so you can't supply output matrices which use 
+     both column and row major layouts.  Now all the output matrices need to 
+     use the same memory layout.
+   - Removed the qr_decomposition::get_householder() function.
+
+Bug fixes:
+   - Minor fixes so that dlib compiles in Visual Studio 2010
+
+Other:
+   - Added an overloaded matrix_assign() that handles symmetric kernel_matrix()
+     expressions more efficiently by only evaluating the upper triangular part
+     of the matrix.
+
+</pre></td>
+</tr></table>
+<hr>
+<h1 style="margin:0px;">Release 17.30</h1>
+<u>Release date</u>: Jul 28, 2010<br><u>Major Changes in this Release</u>:
+            <table cellspacing="5" cellpadding="0" width="100%"><tr>
+<td width="15"></td>
+<td><pre>
+New Stuff:
+
+Non-Backwards Compatible Changes:
+
+Bug fixes:
+   - Fixed a compile-time bug in the matrix related to multiplication by 
+     subm() expressions when the BLAS bindings were enabled.
+   - Fixed a bug in train_probabilistic_decision_function() which could 
+     cause it to go into an infinite loop when working with very large 
+     datasets.
+
+Other:
+
+</pre></td>
+</tr></table>
+<hr>
+<h1 style="margin:0px;">Release 17.29</h1>
+<u>Release date</u>: Jul 25, 2010<br><u>Major Changes in this Release</u>:
+            <table cellspacing="5" cellpadding="0" width="100%"><tr>
+<td width="15"></td>
+<td><pre>
+New Stuff:
+  - Added a reference_wrapper implementation and modified the thread_function 
+    slightly so it works with it.
+  - Added an implementation of kernel ridge regression.
+  - Added a simple newton search strategy for optimizing functions.
+
+Non-Backwards Compatible Changes:
+  - If you have created your own matrix expressions then its possible this
+    new release will cause them to not compile.  
+
+Bug fixes:
+  - Fixed a bug in scale_columns.  It said it didn't have any destructive aliasing 
+    when in fact it destructively aliased its second argument.
+  - Fixed a bug in the random number generator where setting the seed back to ""
+    didn't result in the object going back to it's initial state.
+
+Other:
+  - Reorganized the matrix expression code.  It's now much simpler and the
+    library includes a new example program which details the steps needed to
+    create new matrix expressions.
+  - Changed the train_probabilistic_decision_function() routine so that it uses
+    a more numerically stable method to perform its maximum likelihood optimization.
+  - Added missing get/set epsilon functions to the RVM training objects.
+    I also changed the default epsilon from 0.0005 to 0.001.
+</pre></td>
+</tr></table>
+<hr>
+<h1 style="margin:0px;">Release 17.28</h1>
+<u>Release date</u>: Jun 14, 2010<br><u>Major Changes in this Release</u>:
+            <table cellspacing="5" cellpadding="0" width="100%"><tr>
+<td width="15"></td>
+<td><pre>
+New Stuff:
+   - Added the simplify_linear_decision_function() routines.
+   - Added the find_approximate_k_nearest_neighbors() function.
+   - Added the fill_lisf() function.
+
+Non-Backwards Compatible Changes:
+   - Made the sample_pair have a default distance of infinity instead of
+     the max floating point value.  I also reworked the graph creation functions 
+     to make them a little more versatile.  Now you can use infinite distances to 
+     indicate that certain nodes are not connected at all.
+   - Changed the linear_manifold_regularizer to normalize the regularization
+     parameter by the sum of edge weights instead of the sum of edges.
+
+Bug fixes:
+   - Fixed a bug in the timer_kernel_2 object.  In certain rare cases it would 
+     stop calling the action function and essentially shut down without being 
+     told to do so.
+
+Other:
+   - Made the reduced() and reduced2() functions more efficient.
+   - Many small usability improvements here and there.
+
+</pre></td>
+</tr></table>
+<hr>
+<h1 style="margin:0px;">Release 17.27</h1>
+<u>Release date</u>: May 16, 2010<br><u>Major Changes in this Release</u>:
+            <table cellspacing="5" cellpadding="0" width="100%"><tr>
+<td width="15"></td>
+<td><pre>
+New Stuff:
+   - Added the svm_c_ekm_trainer.  It is a kernelized version of the fast
+     linear trainer svm_c_linear_trainer.
+   - Added the linear_manifold_regularizer and some supporting tools.
+   - Added the sum_rows(), sum_cols(), join_rows(), join_cols(), reshape(), 
+     and pointer_to_matrix() functions.
+   - Added the randomly_subsample() function.
+
+Non-Backwards Compatible Changes:
+
+Bug fixes:
+   - Fixed some minor compile time bugs on certain older compilers.
+
+Other:
+   - Updated the += and -= matrix operators to be a little more flexible.  Now
+     if you try to apply them to a matrix of the wrong size it will automatically
+     resize the target matrix and just do a normal assignment.
+   - Removed the requirement that you load dng files into an image of the exact
+     pixel type that created the file.  Now you can use any pixel type.  I also
+     changed the code so that grayscale pixels with more than 16 bits get saved as
+     16 bit grayscale images instead of 8 bit images.
+
+</pre></td>
+</tr></table>
+<br><br><br><center><a href="old_release_notes.html">Old Release Notes</a></center>
+<br>
+   </td>
+</tr></table></div>
+</body>
+</html>

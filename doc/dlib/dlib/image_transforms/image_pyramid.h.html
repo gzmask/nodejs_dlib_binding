@@ -1,0 +1,110 @@
+<html><!-- Created using the cpp_pretty_printer from the dlib C++ library.  See http://dlib.net for updates. --><head><title>dlib C++ Library - image_pyramid.h</title></head><body bgcolor='white'><pre>
+<font color='#009900'>// Copyright (C) 2010  Davis E. King (davis@dlib.net)
+</font><font color='#009900'>// License: Boost Software License   See LICENSE.txt for the full license.
+</font><font color='#0000FF'>#ifndef</font> DLIB_IMAGE_PYRaMID_H__
+<font color='#0000FF'>#define</font> DLIB_IMAGE_PYRaMID_H__
+
+<font color='#0000FF'>#include</font> "<a style='text-decoration:none' href='image_pyramid_abstract.h.html'>image_pyramid_abstract.h</a>"
+<font color='#0000FF'>#include</font> "<a style='text-decoration:none' href='../pixel.h.html'>../pixel.h</a>"
+<font color='#0000FF'>#include</font> "<a style='text-decoration:none' href='../array2d.h.html'>../array2d.h</a>"
+
+<font color='#0000FF'>namespace</font> dlib
+<b>{</b>
+
+    <font color='#0000FF'>class</font> <b><a name='pyramid_down'></a>pyramid_down</b> : noncopyable
+    <b>{</b>
+    <font color='#0000FF'>public</font>:
+
+        <font color='#0000FF'>template</font> <font color='#5555FF'>&lt;</font>
+            <font color='#0000FF'>typename</font> in_image_type,
+            <font color='#0000FF'>typename</font> out_image_type
+            <font color='#5555FF'>&gt;</font>
+        <font color='#0000FF'><u>void</u></font> <b><a name='operator'></a>operator</b><font face='Lucida Console'>(</font><font face='Lucida Console'>)</font> <font face='Lucida Console'>(</font>
+            <font color='#0000FF'>const</font> in_image_type<font color='#5555FF'>&amp;</font> original,
+            out_image_type<font color='#5555FF'>&amp;</font> down
+        <font face='Lucida Console'>)</font>
+        <b>{</b>
+            <font color='#009900'>// make sure requires clause is not broken
+</font>            <font color='#BB00BB'>DLIB_ASSERT</font><font face='Lucida Console'>(</font>original.<font color='#BB00BB'>nr</font><font face='Lucida Console'>(</font><font face='Lucida Console'>)</font> <font color='#5555FF'>&gt;</font> <font color='#979000'>10</font> <font color='#5555FF'>&amp;</font><font color='#5555FF'>&amp;</font> original.<font color='#BB00BB'>nc</font><font face='Lucida Console'>(</font><font face='Lucida Console'>)</font> <font color='#5555FF'>&gt;</font> <font color='#979000'>10</font> <font color='#5555FF'>&amp;</font><font color='#5555FF'>&amp;</font>
+                        <font color='#BB00BB'>is_same_object</font><font face='Lucida Console'>(</font>original, down<font face='Lucida Console'>)</font> <font color='#5555FF'>=</font><font color='#5555FF'>=</font> <font color='#979000'>false</font>, 
+                        "<font color='#CC0000'>\t void pyramid_down::operator()</font>"
+                        <font color='#5555FF'>&lt;</font><font color='#5555FF'>&lt;</font> "<font color='#CC0000'>\n\t original.nr(): </font>" <font color='#5555FF'>&lt;</font><font color='#5555FF'>&lt;</font> original.<font color='#BB00BB'>nr</font><font face='Lucida Console'>(</font><font face='Lucida Console'>)</font>
+                        <font color='#5555FF'>&lt;</font><font color='#5555FF'>&lt;</font> "<font color='#CC0000'>\n\t original.nc(): </font>" <font color='#5555FF'>&lt;</font><font color='#5555FF'>&lt;</font> original.<font color='#BB00BB'>nc</font><font face='Lucida Console'>(</font><font face='Lucida Console'>)</font>
+                        <font color='#5555FF'>&lt;</font><font color='#5555FF'>&lt;</font> "<font color='#CC0000'>\n\t is_same_object(original, down): </font>" <font color='#5555FF'>&lt;</font><font color='#5555FF'>&lt;</font> <font color='#BB00BB'>is_same_object</font><font face='Lucida Console'>(</font>original, down<font face='Lucida Console'>)</font> 
+                        <font color='#5555FF'>&lt;</font><font color='#5555FF'>&lt;</font> "<font color='#CC0000'>\n\t this:                           </font>" <font color='#5555FF'>&lt;</font><font color='#5555FF'>&lt;</font> <font color='#0000FF'>this</font>
+                        <font face='Lucida Console'>)</font>;
+
+            <font color='#BB00BB'>COMPILE_TIME_ASSERT</font><font face='Lucida Console'>(</font> pixel_traits<font color='#5555FF'>&lt;</font><font color='#0000FF'>typename</font> in_image_type::type<font color='#5555FF'>&gt;</font>::has_alpha <font color='#5555FF'>=</font><font color='#5555FF'>=</font> <font color='#979000'>false</font> <font face='Lucida Console'>)</font>;
+            <font color='#BB00BB'>COMPILE_TIME_ASSERT</font><font face='Lucida Console'>(</font> pixel_traits<font color='#5555FF'>&lt;</font><font color='#0000FF'>typename</font> out_image_type::type<font color='#5555FF'>&gt;</font>::has_alpha <font color='#5555FF'>=</font><font color='#5555FF'>=</font> <font color='#979000'>false</font> <font face='Lucida Console'>)</font>;
+
+            <font color='#0000FF'>typedef</font> <font color='#0000FF'>typename</font> pixel_traits<font color='#5555FF'>&lt;</font><font color='#0000FF'>typename</font> in_image_type::type<font color='#5555FF'>&gt;</font>::basic_pixel_type bp_type;
+            <font color='#0000FF'>typedef</font> <font color='#0000FF'>typename</font> promote<font color='#5555FF'>&lt;</font>bp_type<font color='#5555FF'>&gt;</font>::type ptype;
+            <font color='#0000FF'>typename</font> array2d<font color='#5555FF'>&lt;</font>ptype<font color='#5555FF'>&gt;</font>::kernel_1a temp_img;
+            temp_img.<font color='#BB00BB'>set_size</font><font face='Lucida Console'>(</font>original.<font color='#BB00BB'>nr</font><font face='Lucida Console'>(</font><font face='Lucida Console'>)</font>, <font face='Lucida Console'>(</font>original.<font color='#BB00BB'>nc</font><font face='Lucida Console'>(</font><font face='Lucida Console'>)</font><font color='#5555FF'>-</font><font color='#979000'>3</font><font face='Lucida Console'>)</font><font color='#5555FF'>/</font><font color='#979000'>2</font><font face='Lucida Console'>)</font>;
+            down.<font color='#BB00BB'>set_size</font><font face='Lucida Console'>(</font><font face='Lucida Console'>(</font>original.<font color='#BB00BB'>nr</font><font face='Lucida Console'>(</font><font face='Lucida Console'>)</font><font color='#5555FF'>-</font><font color='#979000'>3</font><font face='Lucida Console'>)</font><font color='#5555FF'>/</font><font color='#979000'>2</font>, <font face='Lucida Console'>(</font>original.<font color='#BB00BB'>nc</font><font face='Lucida Console'>(</font><font face='Lucida Console'>)</font><font color='#5555FF'>-</font><font color='#979000'>3</font><font face='Lucida Console'>)</font><font color='#5555FF'>/</font><font color='#979000'>2</font><font face='Lucida Console'>)</font>;
+
+
+            <font color='#009900'>// This function applies a 5x5 gaussian filter to the image.  It
+</font>            <font color='#009900'>// does this by separating the filter into its horizontal and vertical
+</font>            <font color='#009900'>// components and then downsamples the image by dropping every other
+</font>            <font color='#009900'>// row and column.  Note that we can do these things all together in
+</font>            <font color='#009900'>// one step.
+</font>
+            <font color='#009900'>// apply row filter
+</font>            <font color='#0000FF'>for</font> <font face='Lucida Console'>(</font><font color='#0000FF'><u>long</u></font> r <font color='#5555FF'>=</font> <font color='#979000'>0</font>; r <font color='#5555FF'>&lt;</font> temp_img.<font color='#BB00BB'>nr</font><font face='Lucida Console'>(</font><font face='Lucida Console'>)</font>; <font color='#5555FF'>+</font><font color='#5555FF'>+</font>r<font face='Lucida Console'>)</font>
+            <b>{</b>
+                <font color='#0000FF'><u>long</u></font> oc <font color='#5555FF'>=</font> <font color='#979000'>0</font>;
+                <font color='#0000FF'>for</font> <font face='Lucida Console'>(</font><font color='#0000FF'><u>long</u></font> c <font color='#5555FF'>=</font> <font color='#979000'>0</font>; c <font color='#5555FF'>&lt;</font> temp_img.<font color='#BB00BB'>nc</font><font face='Lucida Console'>(</font><font face='Lucida Console'>)</font>; <font color='#5555FF'>+</font><font color='#5555FF'>+</font>c<font face='Lucida Console'>)</font>
+                <b>{</b>
+                    ptype pix1;
+                    ptype pix2;
+                    ptype pix3;
+                    ptype pix4;
+                    ptype pix5;
+
+                    <font color='#BB00BB'>assign_pixel</font><font face='Lucida Console'>(</font>pix1, original[r][oc]<font face='Lucida Console'>)</font>;
+                    <font color='#BB00BB'>assign_pixel</font><font face='Lucida Console'>(</font>pix2, original[r][oc<font color='#5555FF'>+</font><font color='#979000'>1</font>]<font face='Lucida Console'>)</font>;
+                    <font color='#BB00BB'>assign_pixel</font><font face='Lucida Console'>(</font>pix3, original[r][oc<font color='#5555FF'>+</font><font color='#979000'>2</font>]<font face='Lucida Console'>)</font>;
+                    <font color='#BB00BB'>assign_pixel</font><font face='Lucida Console'>(</font>pix4, original[r][oc<font color='#5555FF'>+</font><font color='#979000'>3</font>]<font face='Lucida Console'>)</font>;
+                    <font color='#BB00BB'>assign_pixel</font><font face='Lucida Console'>(</font>pix5, original[r][oc<font color='#5555FF'>+</font><font color='#979000'>4</font>]<font face='Lucida Console'>)</font>;
+
+                    pix2 <font color='#5555FF'>*</font><font color='#5555FF'>=</font> <font color='#979000'>4</font>;
+                    pix3 <font color='#5555FF'>*</font><font color='#5555FF'>=</font> <font color='#979000'>6</font>;
+                    pix4 <font color='#5555FF'>*</font><font color='#5555FF'>=</font> <font color='#979000'>4</font>;
+                    
+                    <font color='#BB00BB'>assign_pixel</font><font face='Lucida Console'>(</font>temp_img[r][c], pix1 <font color='#5555FF'>+</font> pix2 <font color='#5555FF'>+</font> pix3 <font color='#5555FF'>+</font> pix4 <font color='#5555FF'>+</font> pix5<font face='Lucida Console'>)</font>;
+                    oc <font color='#5555FF'>+</font><font color='#5555FF'>=</font> <font color='#979000'>2</font>;
+                <b>}</b>
+            <b>}</b>
+
+
+            <font color='#009900'>// apply column filter
+</font>            <font color='#0000FF'><u>long</u></font> dr <font color='#5555FF'>=</font> <font color='#979000'>0</font>;
+            <font color='#0000FF'>for</font> <font face='Lucida Console'>(</font><font color='#0000FF'><u>long</u></font> r <font color='#5555FF'>=</font> <font color='#979000'>2</font>; r <font color='#5555FF'>&lt;</font> temp_img.<font color='#BB00BB'>nr</font><font face='Lucida Console'>(</font><font face='Lucida Console'>)</font><font color='#5555FF'>-</font><font color='#979000'>2</font>; r <font color='#5555FF'>+</font><font color='#5555FF'>=</font> <font color='#979000'>2</font><font face='Lucida Console'>)</font>
+            <b>{</b>
+                <font color='#0000FF'>for</font> <font face='Lucida Console'>(</font><font color='#0000FF'><u>long</u></font> c <font color='#5555FF'>=</font> <font color='#979000'>0</font>; c <font color='#5555FF'>&lt;</font> temp_img.<font color='#BB00BB'>nc</font><font face='Lucida Console'>(</font><font face='Lucida Console'>)</font>; <font color='#5555FF'>+</font><font color='#5555FF'>+</font>c<font face='Lucida Console'>)</font>
+                <b>{</b>
+                    ptype temp <font color='#5555FF'>=</font> temp_img[r<font color='#5555FF'>-</font><font color='#979000'>2</font>][c] <font color='#5555FF'>+</font> 
+                                 temp_img[r<font color='#5555FF'>-</font><font color='#979000'>1</font>][c]<font color='#5555FF'>*</font><font color='#979000'>4</font> <font color='#5555FF'>+</font>  
+                                 temp_img[r  ][c]<font color='#5555FF'>*</font><font color='#979000'>6</font> <font color='#5555FF'>+</font>  
+                                 temp_img[r<font color='#5555FF'>-</font><font color='#979000'>1</font>][c]<font color='#5555FF'>*</font><font color='#979000'>4</font> <font color='#5555FF'>+</font>  
+                                 temp_img[r<font color='#5555FF'>-</font><font color='#979000'>2</font>][c];  
+
+                    <font color='#BB00BB'>assign_pixel</font><font face='Lucida Console'>(</font>down[dr][c],temp<font color='#5555FF'>/</font><font color='#979000'>256</font><font face='Lucida Console'>)</font>;
+                <b>}</b>
+                <font color='#5555FF'>+</font><font color='#5555FF'>+</font>dr;
+            <b>}</b>
+
+        <b>}</b>
+
+    <font color='#0000FF'>private</font>:
+
+
+    <b>}</b>;
+
+<b>}</b>
+
+<font color='#0000FF'>#endif</font> <font color='#009900'>// DLIB_IMAGE_PYRaMID_H__
+</font>
+
+</pre></body></html>
