@@ -86,6 +86,6 @@ static int DoSomething_After (eio_req *req) {
 extern "C" void init (Handle<Object> target) {
   HandleScope scope;
   //usage:
-  //export.updateEvidence(integer_x, integer_y, passed_courses, function (error, result, name)
+  //export.updateEvidence(integer_x, integer_y, passed_courses, function (error, result, passed_courses)
   NODE_SET_METHOD(target, "updateEvidence", DoSomethingAsync);
 }
