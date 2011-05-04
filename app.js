@@ -41,15 +41,14 @@ app.post('/evidence', function(req, res){
 	//console.log(req.body.user); //{ name: 'ray', email: 'ray.lei@uregina.ca' }
 	console.log(req.body); //user: { name: 'ray', email: 'gzmask@gmail.com' } }
 	var passed_courses = req.body.passed_course.join("-");
-	bayesian.updateEvidence(req.body.user.x, req.body.user.y, passed_courses, function (error, result, name) {
+	bayesian.updateEvidence(req.body.user.x, req.body.user.y, passed_courses, function (error, result, passed_courses) {
 		res.render('evidence', 
 			{locals:
 				{ names:['foo','bar','baz'], 
 				'result':result, 
-				'name':name,
 				'user_name':req.body.user.name,
 				'user_email':req.body.user.email, 
-				passed_courses : req.body.passed_course
+				'passed_courses' : passed_courses
 				}});
 	});
 	//res.redirect('/names');
