@@ -85,5 +85,5 @@ static int DoSomething_After (eio_req *req) {
 
 extern "C" void init (Handle<Object> target) {
   HandleScope scope;
-  NODE_SET_METHOD(target, "doSomething", DoSomethingAsync);
+  NODE_SET_METHOD(target, "updateEvidence", DoSomethingAsync);
 }
