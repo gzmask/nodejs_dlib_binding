@@ -19,7 +19,7 @@ struct simple_request {
   int y;
   Persistent<Function> cb;
   // maybe it matters to put the char[] last?  not sure.
-  char name[1];
+  char passed_courses[1];
 };
 
 char* bayesian_result;
@@ -32,15 +32,15 @@ static Handle<Value> DoSomethingAsync (const Arguments& args) {
   }
   int x = args[0]->Int32Value(); //this is the x in doSomething
   int y = args[1]->Int32Value(); //this is the y in doSomething
-  String::Utf8Value name(args[2]); //this is the name in doSomething
+  String::Utf8Value passed_courses(args[2]); //this is the name in doSomething
   Local<Function> cb = Local<Function>::Cast(args[3]); //this is the callback(cb) in doSomething, which is passed by javascript
 
   simple_request *sr = (simple_request *)
-    malloc(sizeof(struct simple_request) + name.length() + 1); //get memory in heap
+    malloc(sizeof(struct simple_request) + passed_courses.length() + 1); //get memory in heap
 
   //assign four parameters of doSomething to struct
   sr->cb = Persistent<Function>::New(cb);
-  strncpy(sr->name, *name, name.length() + 1);
+  strncpy(sr->passed_courses, *passed_courses, passed_courses.length() + 1);
   sr->x = x;
   sr->y = y;
 
@@ -56,8 +56,8 @@ static int DoSomething (eio_req *req) {
   struct simple_request * sr = (struct simple_request *)req->data;
   //sleep(2); // just to make it less pointless to be async.
   //req->result = sr->x + sr->y;
-  //req->result = bayesian_test(sr->x, sr->y, sr->name);
-  bayesian_result = bayesian_test(sr->x, sr->y, sr->name);
+  //req->result = bayesian_test(sr->x, sr->y, sr->passed_courses);
+  bayesian_result = bayesian_test(sr->x, sr->y, sr->passed_courses);
   return 0;
 }
 
@@ -72,7 +72,7 @@ static int DoSomething_After (eio_req *req) {
   argv[0] = Local<Value>::New(Null()); //cb(er)
   //argv[1] = String::New(req->result); //cb(res)
   argv[1] = String::New(bayesian_result); //cb(res)
-  argv[2] = String::New(sr->name); //cb(n)
+  argv[2] = String::New(sr->passed_courses); //cb(n)
   TryCatch try_catch;
   sr->cb->Call(Context::GetCurrent()->Global(), 3, argv);
   if (try_catch.HasCaught()) {
@@ -85,5 +85,7 @@ static int DoSomething_After (eio_req *req) {
 
 extern "C" void init (Handle<Object> target) {
   HandleScope scope;
+  //usage:
+  //export.updateEvidence(integer_x, integer_y, passed_courses, function (error, result, name)
   NODE_SET_METHOD(target, "updateEvidence", DoSomethingAsync);
 }
