@@ -17,12 +17,14 @@ extern "C" void init (Handle<Object>); //this gets called by node.js when javasc
 struct simple_request {
   int x;
   int y;
+  char* bayesian_result;
   Persistent<Function> cb;
   // maybe it matters to put the char[] last?  not sure.
+  // it's because you want to extent the sizeof passed_courses dynamically later on due to security measure.
+  // however, order does not matter
   char passed_courses[1];
 };
 
-char* bayesian_result;
 
 static Handle<Value> DoSomethingAsync (const Arguments& args) {
   HandleScope scope;
@@ -56,8 +58,8 @@ static int DoSomething (eio_req *req) {
   struct simple_request * sr = (struct simple_request *)req->data;
   //sleep(2); // just to make it less pointless to be async.
   //req->result = sr->x + sr->y;
-  //req->result = bayesian_test(sr->x, sr->y, sr->passed_courses);
-  bayesian_result = bayesian_test(sr->x, sr->y, sr->passed_courses);
+  sr->bayesian_result = bayesian_test(sr->x, sr->y, sr->passed_courses);
+  //bayesian_result = bayesian_test(sr->x, sr->y, sr->passed_courses);
   return 0;
 }
 
@@ -70,8 +72,8 @@ static int DoSomething_After (eio_req *req) {
   struct simple_request * sr = (struct simple_request *)req->data;
   Local<Value> argv[3];
   argv[0] = Local<Value>::New(Null()); //cb(er)
-  //argv[1] = String::New(req->result); //cb(res)
-  argv[1] = String::New(bayesian_result); //cb(res)
+  argv[1] = String::New(sr->bayesian_result); //cb(res)
+  //argv[1] = String::New(bayesian_result); //cb(res)
   argv[2] = String::New(sr->passed_courses); //cb(n)
   TryCatch try_catch;
   sr->cb->Call(Context::GetCurrent()->Global(), 3, argv);
