@@ -47,8 +47,7 @@ app.post('/evidence', function(req, res){
 				{ names:['foo','bar','baz'], 
 				'result':result, 
 				'user_name':req.body.user.name,
-				'user_email':req.body.user.email, 
-				'passed_courses' : passed_courses
+				'user_email':req.body.user.email
 				}});
 	});
 	//res.redirect('/names');
