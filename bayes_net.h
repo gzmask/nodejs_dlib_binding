@@ -1,1 +1,1 @@
-char* bayesian_test(int x, int y, char * passed_courses);
+char* bayesian_test(char * passed_courses);

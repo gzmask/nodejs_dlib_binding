@@ -15,7 +15,7 @@ const float middle = 0.7;
 const float hard = 0.6;
 
 // ----------------------------------------------------------------------------------------
-char* bayesian_test(int x, int y, char * passed_courses)
+char* bayesian_test(char * passed_courses)
 {
     // There are many useful convenience functions in this namespace.  They all
     // perform simple access or modify operations on the nodes of a bayesian network. 

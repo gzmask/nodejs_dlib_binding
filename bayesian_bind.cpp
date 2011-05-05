@@ -15,8 +15,6 @@ static int DoSomething_After (eio_req *);
 extern "C" void init (Handle<Object>); //this gets called by node.js when javascript calls this binding. this calls DoSomethingAsync
 
 struct simple_request {
-  int x;
-  int y;
   char* bayesian_result;
   Persistent<Function> cb;
   // maybe it matters to put the char[] last?  not sure.
@@ -28,14 +26,12 @@ struct simple_request {
 
 static Handle<Value> DoSomethingAsync (const Arguments& args) {
   HandleScope scope;
-  const char *usage = "usage: doSomething(x, y, name, cb)";
-  if (args.Length() != 4) {
+  const char *usage = "usage: doSomething(passed_courses, cb)";
+  if (args.Length() != 2) {
     return ThrowException(Exception::Error(String::New(usage)));
   }
-  int x = args[0]->Int32Value(); //this is the x in doSomething
-  int y = args[1]->Int32Value(); //this is the y in doSomething
-  String::Utf8Value passed_courses(args[2]); //this is the name in doSomething
-  Local<Function> cb = Local<Function>::Cast(args[3]); //this is the callback(cb) in doSomething, which is passed by javascript
+  String::Utf8Value passed_courses(args[0]); //this is the name in doSomething
+  Local<Function> cb = Local<Function>::Cast(args[1]); //this is the callback(cb) in doSomething, which is passed by javascript
 
   simple_request *sr = (simple_request *)
     malloc(sizeof(struct simple_request) + passed_courses.length() + 1); //get memory in heap
@@ -43,8 +39,6 @@ static Handle<Value> DoSomethingAsync (const Arguments& args) {
   //assign four parameters of doSomething to struct
   sr->cb = Persistent<Function>::New(cb);
   strncpy(sr->passed_courses, *passed_courses, passed_courses.length() + 1);
-  sr->x = x;
-  sr->y = y;
 
   //deploy the c++ DoSomething/DoSomething_After function, and struct to thread pool using libeio 
   eio_custom(DoSomething, EIO_PRI_DEFAULT, DoSomething_After, sr); //I believe sr got sent to DoSomething/DoSomething_After as eio_req *req->data in the following func def
@@ -58,7 +52,7 @@ static int DoSomething (eio_req *req) {
   struct simple_request * sr = (struct simple_request *)req->data;
   //sleep(2); // just to make it less pointless to be async.
   //req->result = sr->x + sr->y;
-  sr->bayesian_result = bayesian_test(sr->x, sr->y, sr->passed_courses);
+  sr->bayesian_result = bayesian_test(sr->passed_courses);
   //bayesian_result = bayesian_test(sr->x, sr->y, sr->passed_courses);
   return 0;
 }
@@ -88,6 +82,6 @@ static int DoSomething_After (eio_req *req) {
 extern "C" void init (Handle<Object> target) {
   HandleScope scope;
   //usage:
-  //export.updateEvidence(integer_x, integer_y, passed_courses, function (error, result, passed_courses)
+  //export.updateEvidence(passed_courses, function (error, result, passed_courses)
   NODE_SET_METHOD(target, "updateEvidence", DoSomethingAsync);
 }
