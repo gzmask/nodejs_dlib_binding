@@ -30,7 +30,7 @@ static Handle<Value> DoSomethingAsync (const Arguments& args) {
   if (args.Length() != 2) {
     return ThrowException(Exception::Error(String::New(usage)));
   }
-  String::Utf8Value passed_courses(args[0]); //this is the name in doSomething
+  String::Utf8Value passed_courses(args[0]); 
   Local<Function> cb = Local<Function>::Cast(args[1]); //this is the callback(cb) in doSomething, which is passed by javascript
 
   simple_request *sr = (simple_request *)
