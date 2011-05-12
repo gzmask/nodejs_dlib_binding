@@ -28,30 +28,12 @@ char* bayesian_test(char * passed_courses)
     directed_graph<bayes_node>::kernel_1a_c bn;
 
     // Use an enum to make some more readable names for our nodes.
-    enum nodes
-    {
-        cs110 = 0,
-        cs201 = 1,
-        cs207 = 2,
-        cs115 = 3,
-		math105 = 4,
-		math110 = 5,
-		cs270 = 6,
-		cs100 = 7,
-		engl100 = 8,
-		math122 = 9,
-		math111 = 10,
-		cs261 = 11,
-		cs280 = 12,
-		cs301 = 13,
-		cs203 = 14,
-		cs271 = 15
-    };
+	enum nodes { cs110, cs201, cs207, cs115, math105, math110, cs270, cs100, engl100, math122, math111, cs261, cs280, cs301, cs203, cs271 };
 
 	//enum for the array of difficulty levels
 	enum difficulties { easy, middle, hard };
 
-	//set the difficulties
+	//set the pass rate for each difficulty
 	float difficulties[3];
 	difficulties[easy] = 0.8;
 	difficulties[middle] = 0.7;
