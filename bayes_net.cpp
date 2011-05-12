@@ -52,11 +52,14 @@ char* bayesian_test(char * passed_courses)
 		cs271 = 15
     };
 
-	/*char * pch;
-	pch = strstr (passed_courses, "10");
-	if (pch != NULL) {
-		cout<<"Sucess is closed!!!!"<<endl;
-	}*/
+	//enum for the array of difficulty levels
+	/*enum difficulties { easy, middle, hard };
+
+	//set the difficulties
+	float difficulties[3];
+	difficulties[easy] = 0.8;
+	difficulties[middle] = 0.7;
+	difficulties[hard] = 0.6;*/
 
     // The next few blocks of code setup our bayesian network.
 
@@ -486,6 +489,7 @@ char* bayesian_test(char * passed_courses)
 	set_node_value(bn, math122, 0);
 	set_node_as_evidence(bn, math122);
 
+	//update evidence according to user input
 	if (strstr(passed_courses, "-0-") != NULL) {
 		set_node_value(bn, cs110, 1);
 		set_node_as_evidence(bn, cs110);

@@ -1,4 +1,3 @@
 moving targets:
-	packup the binding as an nodejs module
 	be able to read standard bayesian network files
 	be able to output standard bayesian network files
