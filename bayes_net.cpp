@@ -10,10 +10,6 @@ using namespace dlib;
 using namespace std;
 #include "bayes_net.h"
 
-const float easy = 0.8;
-const float middle = 0.7;
-const float hard = 0.6;
-
 // ----------------------------------------------------------------------------------------
 char* bayesian_test(char * passed_courses)
 {
@@ -53,13 +49,13 @@ char* bayesian_test(char * passed_courses)
     };
 
 	//enum for the array of difficulty levels
-	/*enum difficulties { easy, middle, hard };
+	enum difficulties { easy, middle, hard };
 
 	//set the difficulties
 	float difficulties[3];
 	difficulties[easy] = 0.8;
 	difficulties[middle] = 0.7;
-	difficulties[hard] = 0.6;*/
+	difficulties[hard] = 0.6;
 
     // The next few blocks of code setup our bayesian network.
 
@@ -147,8 +143,8 @@ char* bayesian_test(char * passed_courses)
     // object to reflect that cs201 has cs110 as parents.
     parent_state.add(cs110, 1);
     //==============================p(cs201=1 | cs110=1) = 0.8============================== 
-    set_node_probability(bn, cs201, 1, parent_state, easy);
-    set_node_probability(bn, cs201, 0, parent_state, 1-easy);
+    set_node_probability(bn, cs201, 1, parent_state, difficulties[easy]);
+    set_node_probability(bn, cs201, 0, parent_state, 1-difficulties[easy]);
     parent_state[cs110] = 0;
     //==============================p(cs201=1 | cs110=0) = 0==============================
     set_node_probability(bn, cs201, 1, parent_state, 0);
@@ -158,8 +154,8 @@ char* bayesian_test(char * passed_courses)
     //==============================p(cs207 | cs110) CPT============================== 
     parent_state.clear();
     parent_state.add(cs110,1);
-    set_node_probability(bn, cs207, 1, parent_state, easy);
-    set_node_probability(bn, cs207, 0, parent_state, 1-easy);
+    set_node_probability(bn, cs207, 1, parent_state, difficulties[easy]);
+    set_node_probability(bn, cs207, 0, parent_state, 1-difficulties[easy]);
     parent_state[cs110] = 0;
     set_node_probability(bn, cs207, 1, parent_state, 0);
     set_node_probability(bn, cs207, 0, parent_state, 1-0);
@@ -169,18 +165,18 @@ char* bayesian_test(char * passed_courses)
     parent_state.add(cs110,1);
     parent_state.add(math105, 1);
     parent_state.add(math110, 1);
-    set_node_probability(bn, cs115, 1, parent_state, easy);
-    set_node_probability(bn, cs115, 0, parent_state, 1-easy);
+    set_node_probability(bn, cs115, 1, parent_state, difficulties[easy]);
+    set_node_probability(bn, cs115, 0, parent_state, 1-difficulties[easy]);
     parent_state[cs110] = 1;
     parent_state[math105] = 1;
     parent_state[math110] = 0;
-    set_node_probability(bn, cs115, 1, parent_state, easy);
-    set_node_probability(bn, cs115, 0, parent_state, 1-easy);
+    set_node_probability(bn, cs115, 1, parent_state, difficulties[easy]);
+    set_node_probability(bn, cs115, 0, parent_state, 1-difficulties[easy]);
     parent_state[cs110] = 1;
     parent_state[math105] = 0;
     parent_state[math110] = 1;
-    set_node_probability(bn, cs115, 1, parent_state, easy);
-    set_node_probability(bn, cs115, 0, parent_state, 1-easy);
+    set_node_probability(bn, cs115, 1, parent_state, difficulties[easy]);
+    set_node_probability(bn, cs115, 0, parent_state, 1-difficulties[easy]);
     parent_state[cs110] = 1;
     parent_state[math105] = 0;
     parent_state[math110] = 0;
@@ -213,8 +209,8 @@ char* bayesian_test(char * passed_courses)
     parent_state.add(cs110,1);
     parent_state.add(cs100, 1);
     parent_state.add(engl100, 1);
-    set_node_probability(bn, cs270, 1, parent_state, easy);
-    set_node_probability(bn, cs270, 0, parent_state, 1-easy);
+    set_node_probability(bn, cs270, 1, parent_state, difficulties[easy]);
+    set_node_probability(bn, cs270, 0, parent_state, 1-difficulties[easy]);
     parent_state[cs110] = 1;
     parent_state[cs100] = 1;
     parent_state[engl100] = 0;
@@ -223,18 +219,18 @@ char* bayesian_test(char * passed_courses)
     parent_state[cs110] = 1;
     parent_state[cs100] = 0;
     parent_state[engl100] = 1;
-    set_node_probability(bn, cs270, 1, parent_state, easy);
-    set_node_probability(bn, cs270, 0, parent_state, 1-easy);
+    set_node_probability(bn, cs270, 1, parent_state, difficulties[easy]);
+    set_node_probability(bn, cs270, 0, parent_state, 1-difficulties[easy]);
     parent_state[cs110] = 1;
     parent_state[cs100] = 0;
     parent_state[engl100] = 0;
-    set_node_probability(bn, cs270, 1, parent_state, easy);
-    set_node_probability(bn, cs270, 0, parent_state, 1-easy);
+    set_node_probability(bn, cs270, 1, parent_state, difficulties[easy]);
+    set_node_probability(bn, cs270, 0, parent_state, 1-difficulties[easy]);
     parent_state[cs110] = 0;
     parent_state[cs100] = 1;
     parent_state[engl100] = 1;
-    set_node_probability(bn, cs270, 1, parent_state, easy);
-    set_node_probability(bn, cs270, 0, parent_state, 1-easy);
+    set_node_probability(bn, cs270, 1, parent_state, difficulties[easy]);
+    set_node_probability(bn, cs270, 0, parent_state, 1-difficulties[easy]);
     parent_state[cs110] = 0;
     parent_state[cs100] = 1;
     parent_state[engl100] = 0;
@@ -257,20 +253,20 @@ char* bayesian_test(char * passed_courses)
     parent_state.add(math122,1);
     parent_state.add(cs110,1);
     parent_state.add(cs115,1);
-    set_node_probability(bn, cs261, 1, parent_state, easy);
-    set_node_probability(bn, cs261, 0, parent_state, 1-easy);
+    set_node_probability(bn, cs261, 1, parent_state, difficulties[easy]);
+    set_node_probability(bn, cs261, 0, parent_state, 1-difficulties[easy]);
     parent_state[math111] = 1;
     parent_state[math122] = 1;
     parent_state[cs110] = 1;
     parent_state[cs115] = 0;
-    set_node_probability(bn, cs261, 1, parent_state, easy);
-    set_node_probability(bn, cs261, 0, parent_state, 1-easy);
+    set_node_probability(bn, cs261, 1, parent_state, difficulties[easy]);
+    set_node_probability(bn, cs261, 0, parent_state, 1-difficulties[easy]);
     parent_state[math111] = 1;
     parent_state[math122] = 1;
     parent_state[cs110] = 0;
     parent_state[cs115] = 1;
-    set_node_probability(bn, cs261, 1, parent_state, easy);
-    set_node_probability(bn, cs261, 0, parent_state, 1-easy);
+    set_node_probability(bn, cs261, 1, parent_state, difficulties[easy]);
+    set_node_probability(bn, cs261, 0, parent_state, 1-difficulties[easy]);
     parent_state[math111] = 1;
     parent_state[math122] = 1;
     parent_state[cs110] = 0;
@@ -354,8 +350,8 @@ char* bayesian_test(char * passed_courses)
     parent_state.clear();
     parent_state.add(cs110,1);
     parent_state.add(engl100,1);
-    set_node_probability(bn, cs280, 1, parent_state, easy);
-    set_node_probability(bn, cs280, 0, parent_state, 1-easy);
+    set_node_probability(bn, cs280, 1, parent_state, difficulties[easy]);
+    set_node_probability(bn, cs280, 0, parent_state, 1-difficulties[easy]);
     parent_state[cs110] = 1;
     parent_state[engl100] = 0;
     set_node_probability(bn, cs280, 1, parent_state, 0);
@@ -372,8 +368,8 @@ char* bayesian_test(char * passed_courses)
     //===========================p(cs301 | cs201) CPT========================== 
     parent_state.clear();
     parent_state.add(cs201,1);
-    set_node_probability(bn, cs301, 1, parent_state, easy);
-    set_node_probability(bn, cs301, 0, parent_state, 1-easy);
+    set_node_probability(bn, cs301, 1, parent_state, difficulties[easy]);
+    set_node_probability(bn, cs301, 0, parent_state, 1-difficulties[easy]);
     parent_state[cs201] = 0;
     set_node_probability(bn, cs301, 1, parent_state, 0);
     set_node_probability(bn, cs301, 0, parent_state, 1-0);
@@ -381,8 +377,8 @@ char* bayesian_test(char * passed_courses)
     //===========================p(cs203 | cs115) CPT========================== 
     parent_state.clear();
     parent_state.add(cs115,1);
-    set_node_probability(bn, cs203, 1, parent_state, easy);
-    set_node_probability(bn, cs203, 0, parent_state, 1-easy);
+    set_node_probability(bn, cs203, 1, parent_state, difficulties[easy]);
+    set_node_probability(bn, cs203, 0, parent_state, 1-difficulties[easy]);
     parent_state[cs115] = 0;
     set_node_probability(bn, cs203, 1, parent_state, 0);
     set_node_probability(bn, cs203, 0, parent_state, 1-0);
@@ -391,8 +387,8 @@ char* bayesian_test(char * passed_courses)
     parent_state.clear();
     parent_state.add(cs110,1);
     parent_state.add(cs270,1);
-    set_node_probability(bn, cs271, 1, parent_state, easy);
-    set_node_probability(bn, cs271, 0, parent_state, 1-easy);
+    set_node_probability(bn, cs271, 1, parent_state, difficulties[easy]);
+    set_node_probability(bn, cs271, 0, parent_state, 1-difficulties[easy]);
     parent_state[cs110] = 1;
     parent_state[cs270] = 0;
     set_node_probability(bn, cs271, 1, parent_state, 0);
