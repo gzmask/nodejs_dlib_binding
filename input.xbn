@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<ANALYSISNOTEBOOK NAME="Notebook.bndefault" ROOT="bndefault">
+<BNMODEL NAME="bndefault">
+	<STATICPROPERTIES><FORMAT>MSR DTAS XML</FORMAT>
+		<VERSION>1.0</VERSION>
+		<CREATOR>Microsoft Research DTAS</CREATOR>
+	</STATICPROPERTIES>
+	<DYNAMICPROPERTIES>
+		<PROPERTYTYPE NAME="DTASDG_Notes" TYPE="stringarray">
+			<COMMENT>Notes on the diagram</COMMENT>
+		</PROPERTYTYPE>
+		<PROPERTYTYPE NAME="MS_Addins" TYPE="stringarray"/>
+	</DYNAMICPROPERTIES>
+
+	<VARIABLES>
+		<VAR NAME="Burglary" TYPE="discrete" XPOS="0" YPOS="2500">
+			<FULLNAME>Burglary</FULLNAME>
+			<STATENAME>Yes</STATENAME>
+			<STATENAME>No</STATENAME>
+		</VAR>
+		<VAR NAME="Alarm" TYPE="discrete" XPOS="3250" YPOS="7500">
+			<FULLNAME>Alarm</FULLNAME>
+			<STATENAME>Yes</STATENAME>
+			<STATENAME>No</STATENAME>
+		</VAR>
+		<VAR NAME="JohnCalls" TYPE="discrete" XPOS="0" YPOS="12500">
+			<FULLNAME>JohnCalls</FULLNAME>
+			<STATENAME>Yes</STATENAME>
+			<STATENAME>No</STATENAME>
+		</VAR>
+		<VAR NAME="MaryCalls" TYPE="discrete" XPOS="6500" YPOS="12500">
+			<FULLNAME>MaryCalls</FULLNAME>
+			<STATENAME>Yes</STATENAME>
+			<STATENAME>No</STATENAME>
+		</VAR>
+		<VAR NAME="Earthquake" TYPE="discrete" XPOS="6500" YPOS="2500">
+			<FULLNAME>Earthquake</FULLNAME>
+			<STATENAME>Yes</STATENAME>
+			<STATENAME>No</STATENAME>
+		</VAR>
+	</VARIABLES>
+
+	<STRUCTURE>
+		<ARC PARENT="Burglary" CHILD="Alarm"/>
+		<ARC PARENT="Earthquake" CHILD="Alarm"/>
+		<ARC PARENT="Alarm" CHILD="JohnCalls"/>
+		<ARC PARENT="Alarm" CHILD="MaryCalls"/>
+	</STRUCTURE>
+
+	<DISTRIBUTIONS>
+
+		<DIST TYPE="discrete">
+			<PRIVATE NAME="Alarm"/>
+			<CONDSET>
+				<CONDELEM NAME="Burglary"/>    
+				<CONDELEM NAME="Earthquake"/>  
+			</CONDSET>
+			<DPIS>
+				<DPI INDEXES="0 0 ">0.95 0.05 </DPI>
+				<DPI INDEXES="0 1 ">0.94 0.06 </DPI>
+				<DPI INDEXES="1 0 ">0.29 0.71 </DPI>
+				<DPI INDEXES="1 1 ">0.001 0.999 </DPI>
+			</DPIS>
+		</DIST>
+
+		<DIST TYPE="discrete">
+			<PRIVATE NAME="JohnCalls"/>
+			<CONDSET>
+				<CONDELEM NAME="Alarm"/>  
+			</CONDSET>
+			<DPIS>
+				<DPI INDEXES="0 ">0.9 0.1 </DPI>
+				<DPI INDEXES="1 ">0.05 0.95 </DPI>
+			</DPIS>
+		</DIST>
+
+		<DIST TYPE="discrete">
+			<PRIVATE NAME="MaryCalls"/>
+			<CONDSET>
+				<CONDELEM NAME="Alarm"/>  
+			</CONDSET>
+			<DPIS>
+				<DPI INDEXES="0 ">0.7 0.3 </DPI>
+				<DPI INDEXES="1 ">0.01 0.99 </DPI>
+			</DPIS>
+		</DIST>
+
+		<DIST TYPE="discrete">
+			<PRIVATE NAME="Burglary"/>
+			<DPIS>
+				<DPI>0.001 0.999 </DPI>
+			</DPIS>
+		</DIST>
+
+		<DIST TYPE="discrete">
+			<PRIVATE NAME="Earthquake"/>
+			<DPIS>
+				<DPI>0.002 0.998 </DPI>
+			</DPIS>
+		</DIST>
+
+	</DISTRIBUTIONS>
+
+</BNMODEL>
+</ANALYSISNOTEBOOK>

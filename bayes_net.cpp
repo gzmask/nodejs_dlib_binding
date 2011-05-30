@@ -4,6 +4,7 @@
 #include "dlib/directed_graph.h"
 #include <iostream>
 #include <cstring>
+#include "rapidxml/rapidxml.hpp"
 	
 
 using namespace dlib;
