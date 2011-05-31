@@ -2,18 +2,57 @@
 #include "dlib/graph_utils.h"
 #include "dlib/graph.h"
 #include "dlib/directed_graph.h"
+using namespace dlib;
 #include <iostream>
+using namespace std;
 #include <cstring>
 #include "rapidxml/rapidxml.hpp"
+using namespace rapidxml;
 	
 
-using namespace dlib;
-using namespace std;
 #include "bayes_net.h"
 
 // ----------------------------------------------------------------------------------------
 char* bayesian_test(char * passed_courses)
 {
+	string xbn_filename;
+	string line_str;
+	string block_str;
+
+	//this is the code block that reads the ???.xbn file
+	xbn_filename = "input.xbn";
+	ifstream xbn_file (xbn_filename.c_str());
+	if (xbn_file.is_open()) {
+		while (!xbn_file.eof()) {
+			getline(xbn_file, line_str);
+			//cout<<line_str<<endl;
+			//block_str.append(line_str);
+			//block_str.append("\n");
+		}
+		//cout<<block_str<<endl;
+		xbn_file.close();
+	}
+
+/*
+	//cast the string to char*
+	char *xml_text = (char *)block_str.c_str();
+	//parse the string
+	xml_document<> doc;    // character type defaults to char
+	cout<<xml_text<<endl;
+	doc.parse<0>(xml_text);    // 0 means default parse flags
+
+	cout << "Name of my first node is: " << doc.first_node()->name() << "\n";
+
+	//nest node traversal
+	for (xml_node<> *node = doc.first_node()->first_node()->first_node("VARIABLES"); node; node = node->next_sibling()) {
+		cout << "Node variable has value " << node->first_node("FULLNAME")->value() << "\n\n";
+	}
+*/
+
+
+	cout<<"ray ray ray"<<endl;
+
+
     // There are many useful convenience functions in this namespace.  They all
     // perform simple access or modify operations on the nodes of a bayesian network. 
     // You don't have to use them but they are convenient and they also will check for
