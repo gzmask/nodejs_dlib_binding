@@ -4,8 +4,10 @@
 #include "dlib/directed_graph.h"
 using namespace dlib;
 #include <iostream>
+#include <fstream>
 using namespace std;
 #include <cstring>
+#include <string>
 #include "rapidxml/rapidxml.hpp"
 using namespace rapidxml;
 	
@@ -25,7 +27,8 @@ char* bayesian_test(char * passed_courses)
 	if (xbn_file.is_open()) {
 		while (!xbn_file.eof()) {
 			getline(xbn_file, line_str);
-			//cout<<line_str<<endl;
+			//line_str need to be examine throughoutly 
+			cout<<"line_str size:"<<line_str.size()<<endl;
 			//block_str.append(line_str);
 			//block_str.append("\n");
 		}
