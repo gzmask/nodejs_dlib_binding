@@ -2,14 +2,13 @@
 #include "dlib/graph_utils.h"
 #include "dlib/graph.h"
 #include "dlib/directed_graph.h"
-using namespace dlib;
 #include <iostream>
 #include <fstream>
-using namespace std;
-#include <cstring>
 #include <string>
 #include "rapidxml/rapidxml.hpp"
 using namespace rapidxml;
+using namespace dlib;
+using namespace std;
 	
 
 #include "bayes_net.h"
@@ -28,12 +27,23 @@ char* bayesian_test(char * passed_courses)
 		while (!xbn_file.eof()) {
 			getline(xbn_file, line_str);
 			//line_str need to be examine throughoutly 
-			cout<<"line_str size:"<<line_str.size()<<endl;
-			//block_str.append(line_str);
-			//block_str.append("\n");
+			//cout<<"line_str size:"<<line_str.size()<<endl;
+			//for (int i=0; i< line_str.size(); i++) {
+				//cout<<line_str[i];
+				//printf("%c\n", line_str[i]);
+			//}
+			block_str.append(line_str);
+			block_str.append("\n");
 		}
 		//cout<<block_str<<endl;
 		xbn_file.close();
+	}
+	
+	cout<<"ray ray ray"<<endl;
+	cout<<block_str.size()<<endl;
+	for (int i = 0; i< block_str.size(); i++) {
+		if (i % 2 == 0)
+			cout<<"char "<<i<<':'<<block_str[i]<<endl;
 	}
 
 /*
@@ -53,7 +63,6 @@ char* bayesian_test(char * passed_courses)
 */
 
 
-	cout<<"ray ray ray"<<endl;
 
 
     // There are many useful convenience functions in this namespace.  They all
