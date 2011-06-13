@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-using namespace std;
 using namespace node;
 using namespace v8;
 #include "bayes_net.h"

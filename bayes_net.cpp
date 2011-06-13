@@ -39,12 +39,14 @@ char* bayesian_test(char * passed_courses)
 		xbn_file.close();
 	}
 	
-	cout<<"ray ray ray"<<endl;
+	cout<<block_str<<endl;
+/*
 	cout<<block_str.size()<<endl;
 	for (int i = 0; i< block_str.size(); i++) {
 		if (i % 2 == 0)
 			cout<<"char "<<i<<':'<<block_str[i]<<endl;
 	}
+*/
 
 /*
 	//cast the string to char*
