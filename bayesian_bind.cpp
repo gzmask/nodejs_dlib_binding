@@ -81,3 +81,4 @@ extern "C" void init (Handle<Object> target) {
   //export.updateEvidence(passed_courses, function (error, result, passed_courses)
   NODE_SET_METHOD(target, "updateEvidence", DoSomethingAsync);
 }
+

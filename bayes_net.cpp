@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <string.h>
 #include "rapidxml/rapidxml.hpp"
 using namespace rapidxml;
 using namespace dlib;
@@ -640,13 +641,19 @@ char* bayesian_test(char * passed_courses)
 		<< "cs271:" << solution_with_evidence.probability(cs271)(1)
 		<< "}";
 	cout<<"bayes_net.cpp:"<<endl;
-	cout<< result_str.str()<<endl;
+	cout<< result_str.str().c_str()<<endl;
 	//ostringstream s;
 	//s << 123791842.5;
 	//cout<<s.str()<<endl;
+/*
 	char aCString[result_str.str().size()]; 
 	strcpy(aCString, result_str.str().c_str());	
     return aCString;
+*/
+
+	char* aCString = (char *) malloc(result_str.str().length()+1);
+	strncpy(aCString, result_str.str().c_str(), result_str.str().length() + 1);
+	return aCString;
 }
 
 
