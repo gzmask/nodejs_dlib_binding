@@ -71,6 +71,7 @@ static int DoSomething_After (eio_req *req) {
     FatalException(try_catch);
   }
   sr->cb.Dispose();
+  free(sr->bayesian_result);
   free(sr);
   return 0;
 }
