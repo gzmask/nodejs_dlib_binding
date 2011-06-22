@@ -19,9 +19,9 @@ char* bayesian_test(char * passed_courses)
 {
 	string xbn_filename;
 	string line_str;
-	string block_str;
 
 	//this is the code block that reads the ???.xbn file
+/*
 	xbn_filename = "input.xbn";
 	ifstream xbn_file (xbn_filename.c_str());
 	if (xbn_file.is_open()) {
@@ -39,7 +39,114 @@ char* bayesian_test(char * passed_courses)
 		//cout<<block_str<<endl;
 		xbn_file.close();
 	}
+*/
 	
+	string block_str = "\
+<?xml version=\"1.0\"?> \n\
+<ANALYSISNOTEBOOK NAME=\"Notebook.bndefault\" ROOT=\"bndefault\"> \n\
+<BNMODEL NAME=\"bndefault\"> \n\
+	<STATICPROPERTIES><FORMAT>MSR DTAS XML</FORMAT> \n\
+		<VERSION>1.0</VERSION> \n\
+		<CREATOR>Microsoft Research DTAS</CREATOR> \n\
+	</STATICPROPERTIES> \n\
+	<DYNAMICPROPERTIES> \n\
+		<PROPERTYTYPE NAME=\"DTASDG_Notes\" TYPE=\"stringarray\"> \n\
+			<COMMENT>Notes on the diagram</COMMENT> \n\
+		</PROPERTYTYPE> \n\
+		<PROPERTYTYPE NAME=\"MS_Addins\" TYPE=\"stringarray\"/> \n\
+	</DYNAMICPROPERTIES> \n\
+ \n\
+	<VARIABLES> \n\
+		<VAR NAME=\"Burglary\" TYPE=\"discrete\" XPOS=\"0\" YPOS=\"2500\"> \n\
+			<FULLNAME>Burglary</FULLNAME> \n\
+			<STATENAME>Yes</STATENAME> \n\
+			<STATENAME>No</STATENAME> \n\
+		</VAR> \n\
+		<VAR NAME=\"Alarm\" TYPE=\"discrete\" XPOS=\"3250\" YPOS=\"7500\"> \n\
+			<FULLNAME>Alarm</FULLNAME> \n\
+			<STATENAME>Yes</STATENAME> \n\
+			<STATENAME>No</STATENAME> \n\
+		</VAR> \n\
+		<VAR NAME=\"JohnCalls\" TYPE=\"discrete\" XPOS=\"0\" YPOS=\"12500\"> \n\
+			<FULLNAME>JohnCalls</FULLNAME> \n\
+			<STATENAME>Yes</STATENAME> \n\
+			<STATENAME>No</STATENAME> \n\
+		</VAR> \n\
+		<VAR NAME=\"MaryCalls\" TYPE=\"discrete\" XPOS=\"6500\" YPOS=\"12500\"> \n\
+			<FULLNAME>MaryCalls</FULLNAME> \n\
+			<STATENAME>Yes</STATENAME> \n\
+			<STATENAME>No</STATENAME> \n\
+		</VAR> \n\
+		<VAR NAME=\"Earthquake\" TYPE=\"discrete\" XPOS=\"6500\" YPOS=\"2500\"> \n\
+			<FULLNAME>Earthquake</FULLNAME> \n\
+			<STATENAME>Yes</STATENAME> \n\
+			<STATENAME>No</STATENAME> \n\
+		</VAR> \n\
+	</VARIABLES> \n\
+ \n\
+	<STRUCTURE> \n\
+		<ARC PARENT=\"Burglary\" CHILD=\"Alarm\"/> \n\
+		<ARC PARENT=\"Earthquake\" CHILD=\"Alarm\"/> \n\
+		<ARC PARENT=\"Alarm\" CHILD=\"JohnCalls\"/> \n\
+		<ARC PARENT=\"Alarm\" CHILD=\"MaryCalls\"/> \n\
+	</STRUCTURE> \n\
+ \n\
+	<DISTRIBUTIONS> \n\
+ \n\
+		<DIST TYPE=\"discrete\"> \n\
+			<PRIVATE NAME=\"Alarm\"/> \n\
+			<CONDSET> \n\
+				<CONDELEM NAME=\"Burglary\"/>     \n\
+				<CONDELEM NAME=\"Earthquake\"/>   \n\
+			</CONDSET> \n\
+			<DPIS> \n\
+				<DPI INDEXES=\"0 0 \">0.95 0.05 </DPI> \n\
+				<DPI INDEXES=\"0 1 \">0.94 0.06 </DPI> \n\
+				<DPI INDEXES=\"1 0 \">0.29 0.71 </DPI> \n\
+				<DPI INDEXES=\"1 1 \">0.001 0.999 </DPI> \n\
+			</DPIS> \n\
+		</DIST> \n\
+ \n\
+		<DIST TYPE=\"discrete\"> \n\
+			<PRIVATE NAME=\"JohnCalls\"/> \n\
+			<CONDSET> \n\
+				<CONDELEM NAME=\"Alarm\"/>   \n\
+			</CONDSET> \n\
+			<DPIS> \n\
+				<DPI INDEXES=\"0 \">0.9 0.1 </DPI> \n\
+				<DPI INDEXES=\"1 \">0.05 0.95 </DPI> \n\
+			</DPIS> \n\
+		</DIST> \n\
+ \n\
+		<DIST TYPE=\"discrete\"> \n\
+			<PRIVATE NAME=\"MaryCalls\"/> \n\
+			<CONDSET> \n\
+				<CONDELEM NAME=\"Alarm\"/>   \n\
+			</CONDSET> \n\
+			<DPIS> \n\
+				<DPI INDEXES=\"0 \">0.7 0.3 </DPI> \n\
+				<DPI INDEXES=\"1 \">0.01 0.99 </DPI> \n\
+			</DPIS> \n\
+		</DIST> \n\
+ \n\
+		<DIST TYPE=\"discrete\"> \n\
+			<PRIVATE NAME=\"Burglary\"/> \n\
+			<DPIS> \n\
+				<DPI>0.001 0.999 </DPI> \n\
+			</DPIS> \n\
+		</DIST> \n\
+ \n\
+		<DIST TYPE=\"discrete\"> \n\
+			<PRIVATE NAME=\"Earthquake\"/> \n\
+			<DPIS> \n\
+				<DPI>0.002 0.998 </DPI> \n\
+			</DPIS> \n\
+		</DIST> \n\
+ \n\
+	</DISTRIBUTIONS> \n\
+</BNMODEL> \n\
+</ANALYSISNOTEBOOK> \n";
+
 	cout<<block_str<<endl;
 /*
 	cout<<block_str.size()<<endl;
