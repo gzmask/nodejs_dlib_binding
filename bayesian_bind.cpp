@@ -20,7 +20,9 @@ struct simple_request {
   // maybe it matters to put the char[] last?  not sure.
   // it's because you want to extent the sizeof passed_courses dynamically later on due to security measure.
   // however, order does not matter
-  char passed_courses[1];
+  //old char passed_courses[1];
+  //new
+  char* passed_courses;
 };
 
 
@@ -30,15 +32,25 @@ static Handle<Value> DoSomethingAsync (const Arguments& args) {
 	if (args.Length() != 2) {
 		return ThrowException(Exception::Error(String::New(usage)));
 	}
-	String::Utf8Value passed_courses(args[0]); 
+	//old String::Utf8Value passed_courses(args[0]); 
+	//new
+	String::Utf8Value passed_courses_args(args[0]); 
 	Local<Function> cb = Local<Function>::Cast(args[1]); //this is the callback(cb) in doSomething, which is passed by javascript
 
-	simple_request *sr = (simple_request *)
-	malloc(sizeof(struct simple_request) + passed_courses.length() + 1); //get memory in heap
+	/*old
+	//get memory in heap
+	simple_request *sr = (simple_request *) malloc(sizeof(struct simple_request) + passed_courses.length() + 1); 
 
 	//assign four parameters of doSomething to struct
 	sr->cb = Persistent<Function>::New(cb);
 	strncpy(sr->passed_courses, *passed_courses, passed_courses.length() + 1);
+	*/
+	//new
+	simple_request sr_ins;
+	simple_request *sr = &sr_ins;
+	sr->cb = Persistent<Function>::New(cb);
+	sr->passed_courses = (char *) malloc(512);
+	strncpy(sr->passed_courses, *passed_courses_args, passed_courses_args.length() + 1);
 
 	//deploy the c++ DoSomething/DoSomething_After function, and struct to thread pool using libeio 
 	eio_custom(DoSomething, EIO_PRI_DEFAULT, DoSomething_After, sr); //I believe sr got sent to DoSomething/DoSomething_After as eio_req *req->data in the following func def
