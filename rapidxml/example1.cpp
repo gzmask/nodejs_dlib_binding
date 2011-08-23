@@ -165,13 +165,11 @@ int main() {
 
 	//nest node traversal
 	for (xml_node<> *node = doc.first_node()->first_node("food"); node; node = node->next_sibling()) {
-
 		//attribute traversal
 		for (xml_attribute<> *attr = node->first_attribute(); attr; attr = attr->next_attribute()) {
 			cout << "Node food has attribute " << attr->name() << " ";
 			cout << "with value " << attr->value() << "\n";
 		}
-
 		cout << "Node food has value " << node->first_node("name")->value() << "\n\n";
 	}
 

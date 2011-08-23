@@ -16,6 +16,42 @@ using namespace std;
 
 // ----------------------------------------------------------------------------------------
 char* bayesian_test(char * passed_courses) {
+
+	//this is the code block that reads the ???.xbn file
+	char* line_str = (char*)malloc(sizeof(char)*256);
+	char* block_str = new char[4096];
+	const char xbn_filename[] = "input.xbn";
+	std::ifstream xbn_file (xbn_filename);
+	if (xbn_file.is_open()) {
+		xbn_file.getline(line_str, 256);
+		strcpy(block_str, line_str);
+		while (!xbn_file.eof()) {
+			xbn_file.getline(line_str, 256);
+			strcat(line_str, "\n");
+			strcat(block_str, line_str);
+		}
+		xbn_file.close();
+	}
+	printf("the length of block_str is: %i \n", (int)strlen(block_str));
+	printf("%s", block_str);
+	free(line_str);
+
+	//parsing xml using rapidxml
+	xml_document<>* doc = new xml_document<>();
+	doc->parse<0>(block_str);
+	delete [] block_str;
+	printf("Name of first node is %s.\n", doc->first_node()->first_node()->first_node("VARIABLES")->first_node("VAR")->name());
+	for (xml_node<> *node = doc->first_node()->first_node()->first_node("VARIABLES")->first_node("VAR"); node; node = node->next_sibling()) {
+		//attribute traversal
+		for (xml_attribute<> *attr = node->first_attribute(); attr; attr = attr->next_attribute()) {
+			cout << "Node var has attribute " << attr->name() << " ";
+			cout << "with value " << attr->value() << "\n";
+		}
+		cout << "Node VAR has value " << node->first_node("FULLNAME")->value() << "\n\n";
+	}
+	delete doc;
+
+
     // There are many useful convenience functions in this namespace.  They all
     // perform simple access or modify operations on the nodes of a bayesian network. 
     // You don't have to use them but they are convenient and they also will check for
@@ -412,9 +448,11 @@ char* bayesian_test(char * passed_courses) {
     bayesian_network_join_tree solution(bn, join_tree);
 
 
+
     // now print out the probabilities for each node
-    cout << "Using the join tree algorithm, prior:\n";
-    cout << "p(cs110=1) = " << solution.probability(cs110)(1) << endl;
+	printf("Using the join tree algorithm, prior:\n");
+	printf("p(cs110-1) = %f", solution.probability(cs110)(1));
+    //cout << "p(cs110=1) = " << solution.probability(cs110)(1) << endl;
     cout << "p(math105=1) = " << solution.probability(math105)(1) << endl;
     cout << "p(math110=1) = " << solution.probability(math110)(1) << endl;
     cout << "p(cs201=1) = " << solution.probability(cs201)(1) << endl;
