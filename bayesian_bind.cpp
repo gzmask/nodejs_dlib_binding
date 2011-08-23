@@ -46,8 +46,7 @@ static Handle<Value> DoSomethingAsync (const Arguments& args) {
 	strncpy(sr->passed_courses, *passed_courses, passed_courses.length() + 1);
 	*/
 	//new
-	simple_request sr_ins;
-	simple_request *sr = &sr_ins;
+	simple_request *sr = new simple_request();
 	sr->cb = Persistent<Function>::New(cb);
 	sr->passed_courses = (char *) malloc(512);
 	strncpy(sr->passed_courses, *passed_courses_args, passed_courses_args.length() + 1);
