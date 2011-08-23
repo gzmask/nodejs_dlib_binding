@@ -4,10 +4,10 @@
 #include <fstream>
 #include <stdlib.h>
 #include <unistd.h>
+#include "bayes_net.h"
 
 using namespace node;
 using namespace v8;
-#include "bayes_net.h"
 
 static Handle<Value> DoSomethingAsync (const Arguments&); //this deploys DoSomething/DoSomething_After into the thread pool using libeio(eio_custom).
 static int DoSomething (eio_req *);
@@ -20,35 +20,42 @@ struct simple_request {
   // maybe it matters to put the char[] last?  not sure.
   // it's because you want to extent the sizeof passed_courses dynamically later on due to security measure.
   // however, order does not matter
-  //old char passed_courses[1];
-  //new
   char* passed_courses;
 };
 
 
 static Handle<Value> DoSomethingAsync (const Arguments& args) {
 	HandleScope scope;
+	//this is the code block that reads the ???.xbn file
+	char* line_str = (char*)malloc(sizeof(char)*256);
+	char* block_str = new char[4096];
+	const char xbn_filename[] = "input.xbn";
+	std::ifstream xbn_file (xbn_filename);
+	if (xbn_file.is_open()) {
+		xbn_file.getline(line_str, 256);
+		strcpy(block_str, line_str);
+		while (!xbn_file.eof()) {
+			xbn_file.getline(line_str, 256);
+			strcat(line_str, "\n");
+			strcat(block_str, line_str);
+		}
+		xbn_file.close();
+	}
+	printf("the length of block_str is: %i \n", (int)strlen(block_str));
+	printf("%s", block_str);
+	free(line_str);
+	delete [] block_str;
+
 	const char *usage = "usage: doSomething(passed_courses, cb)";
 	if (args.Length() != 2) {
 		return ThrowException(Exception::Error(String::New(usage)));
 	}
-	//old String::Utf8Value passed_courses(args[0]); 
-	//new
 	String::Utf8Value passed_courses_args(args[0]); 
 	Local<Function> cb = Local<Function>::Cast(args[1]); //this is the callback(cb) in doSomething, which is passed by javascript
 
-	/*old
-	//get memory in heap
-	simple_request *sr = (simple_request *) malloc(sizeof(struct simple_request) + passed_courses.length() + 1); 
-
-	//assign four parameters of doSomething to struct
-	sr->cb = Persistent<Function>::New(cb);
-	strncpy(sr->passed_courses, *passed_courses, passed_courses.length() + 1);
-	*/
-	//new
 	simple_request *sr = new simple_request();
 	sr->cb = Persistent<Function>::New(cb);
-	sr->passed_courses = (char *) malloc(512);
+	sr->passed_courses = (char*)malloc(sizeof(char)*512);
 	strncpy(sr->passed_courses, *passed_courses_args, passed_courses_args.length() + 1);
 
 	//deploy the c++ DoSomething/DoSomething_After function, and struct to thread pool using libeio 
@@ -61,32 +68,6 @@ static Handle<Value> DoSomethingAsync (const Arguments& args) {
 // doing v8 things in here will make bad happen.
 static int DoSomething (eio_req *req) {
 	struct simple_request * sr = (struct simple_request *)req->data;
-	char line_str[256];
-	char block_str[4096];
-	char xbn_filename[] = "input.xbn";
-
-	//this is the code block that reads the ???.xbn file
-
-	std::ifstream xbn_file (xbn_filename);
-	if (xbn_file.is_open()) {
-		xbn_file.getline(line_str, 256);
-		strcpy(block_str, line_str);
-		while (!xbn_file.eof()) {
-			xbn_file.getline(line_str, 256);
-			//line_str need to be examine throughoutly 
-			//cout<<"line_str size:"<<line_str.size()<<endl;
-			//for (int i=0; i< line_str.size(); i++) {
-				//cout<<line_str[i];
-				//printf("%c\n", line_str[i]);
-			//}
-			strcat(block_str, line_str);
-		}
-		//cout<<block_str<<endl;
-		xbn_file.close();
-	}
-	printf("the length of block_str is: %d \n",strlen(block_str));
-	//printf(block_str);
-
 	sr->bayesian_result = bayesian_test(sr->passed_courses);
 	return 0;
 }
@@ -110,15 +91,16 @@ static int DoSomething_After (eio_req *req) {
     FatalException(try_catch);
   }
   sr->cb.Dispose();
+  free(sr->passed_courses);
   free(sr->bayesian_result);
   free(sr);
   return 0;
 }
 
 extern "C" void init (Handle<Object> target) {
-  HandleScope scope;
-  //usage:
-  //export.updateEvidence(passed_courses, function (error, result, passed_courses)
-  NODE_SET_METHOD(target, "updateEvidence", DoSomethingAsync);
+	HandleScope scope;
+	//usage:
+	//export.updateEvidence(passed_courses, function (error, result, passed_courses)
+	NODE_SET_METHOD(target, "updateEvidence", DoSomethingAsync);
 }
 
