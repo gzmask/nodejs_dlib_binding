@@ -1,6 +1,9 @@
 #include <v8.h>
 #include <node.h>
 #include <fstream>
+#include <cstdlib>
+#include <string.h>
+#include <stdlib.h>
 #include "bayes_net.h"
  
 using namespace node;
