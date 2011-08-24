@@ -41,14 +41,43 @@ char* bayesian_test(char * passed_courses) {
 	doc->parse<0>(block_str);
 	delete [] block_str;
 	printf("Name of first node is %s.\n", doc->first_node()->first_node()->first_node("VARIABLES")->first_node("VAR")->name());
+	//read variables
 	for (xml_node<> *node = doc->first_node()->first_node()->first_node("VARIABLES")->first_node("VAR"); node; node = node->next_sibling()) {
 		//attribute traversal
 		for (xml_attribute<> *attr = node->first_attribute(); attr; attr = attr->next_attribute()) {
-			cout << "Node var has attribute " << attr->name() << " ";
-			cout << "with value " << attr->value() << "\n";
+			printf("Node var has attribute %s ", attr->name());
+			printf("with value %s\n", attr->value());
 		}
-		cout << "Node VAR has value " << node->first_node("FULLNAME")->value() << "\n\n";
+		printf("Node VAR has value %s\n", node->first_node("FULLNAME")->value());
 	}
+	printf("\n\n");
+	//read arcs
+	for (xml_node<> *node = doc->first_node()->first_node()->first_node("STRUCTURE")->first_node("ARC"); node; node = node->next_sibling()) {
+		for (xml_attribute<> *attr = node->first_attribute(); attr; attr = attr->next_attribute()) {
+			printf("Node arc has attribute %s ", attr->name());
+			printf("with value %s\n", attr->value());
+		}
+	}
+	printf("\n\n");
+	//read CPTs
+	for (xml_node<> *node = doc->first_node()->first_node()->first_node("DISTRIBUTIONS")->first_node("DIST"); node; node = node->next_sibling("DIST")) {
+		for (xml_attribute<> *attr = node->first_attribute(); attr; attr = attr->next_attribute()) {
+			printf("Node DIST has attribute %s ", attr->name());
+			printf("with value %s\n", attr->value());
+		}
+		//read private variable
+		printf("Node PRIVATE has attribute %s ", node->first_node("PRIVATE")->first_attribute()->name());
+		printf("with value %s\n", node->first_node("PRIVATE")->first_attribute()->value());
+		//read condition variables, notice that some CPT don't have one
+		if (node->first_node("CONDSET")) {
+			for (xml_node<> *node_a = node->first_node("CONDSET")->first_node("CONDELEM"); node_a; node_a = node_a->next_sibling()) {
+				//printf("Debug: %s\n", node_a->name());
+				printf("Node CONDELEM has attribute %s ", node_a->first_attribute()->name());
+				printf("with value %s\n", node_a->first_attribute()->value());
+			}
+		}
+	}
+	printf("\n\n");
 	delete doc;
 
 
@@ -451,8 +480,7 @@ char* bayesian_test(char * passed_courses) {
 
     // now print out the probabilities for each node
 	printf("Using the join tree algorithm, prior:\n");
-	printf("p(cs110-1) = %f", solution.probability(cs110)(1));
-    //cout << "p(cs110=1) = " << solution.probability(cs110)(1) << endl;
+    cout << "p(cs110=1) = " << solution.probability(cs110)(1) << endl;
     cout << "p(math105=1) = " << solution.probability(math105)(1) << endl;
     cout << "p(math110=1) = " << solution.probability(math110)(1) << endl;
     cout << "p(cs201=1) = " << solution.probability(cs201)(1) << endl;
