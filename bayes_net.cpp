@@ -51,7 +51,7 @@ char* bayesian_test(char * passed_courses) {
 		printf("Node VAR has value %s\n", node->first_node("FULLNAME")->value());
 	}
 	printf("\n\n");
-	//read arcs
+	//read edges
 	for (xml_node<> *node = doc->first_node()->first_node()->first_node("STRUCTURE")->first_node("ARC"); node; node = node->next_sibling()) {
 		for (xml_attribute<> *attr = node->first_attribute(); attr; attr = attr->next_attribute()) {
 			printf("Node arc has attribute %s ", attr->name());
@@ -70,11 +70,18 @@ char* bayesian_test(char * passed_courses) {
 		printf("with value %s\n", node->first_node("PRIVATE")->first_attribute()->value());
 		//read condition variables, notice that some CPT don't have one
 		if (node->first_node("CONDSET")) {
-			for (xml_node<> *node_a = node->first_node("CONDSET")->first_node("CONDELEM"); node_a; node_a = node_a->next_sibling()) {
+			for (xml_node<> *node_a = node->first_node("CONDSET")->first_node("CONDELEM"); node_a; node_a = node_a->next_sibling("CONDELEM")) {
 				//printf("Debug: %s\n", node_a->name());
 				printf("Node CONDELEM has attribute %s ", node_a->first_attribute()->name());
 				printf("with value %s\n", node_a->first_attribute()->value());
 			}
+		}
+		//read DPI values
+		for (xml_node<> *node_a = node->first_node("DPIS")->first_node("DPI"); node_a; node_a = node_a->next_sibling("DPI")) {
+			printf("Node %s has value ", node_a->name());
+			printf(" %s \n", node_a->value());
+			//printf("Node DPI has attribute %s ", node_a->first_attribute()->name());
+			//printf("with value %s\n", node_a->first_attribute()->value());
 		}
 	}
 	printf("\n\n");
