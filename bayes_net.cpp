@@ -78,10 +78,12 @@ char* bayesian_test(char * passed_courses) {
 		}
 		//read DPI values
 		for (xml_node<> *node_a = node->first_node("DPIS")->first_node("DPI"); node_a; node_a = node_a->next_sibling("DPI")) {
+			if (node_a->first_attribute()) {
+				printf("Node DPI has attribute %s ", node_a->first_attribute()->name());
+				printf("with value %s\n", node_a->first_attribute()->value());
+			}
 			printf("Node %s has value ", node_a->name());
 			printf(" %s \n", node_a->value());
-			//printf("Node DPI has attribute %s ", node_a->first_attribute()->name());
-			//printf("with value %s\n", node_a->first_attribute()->value());
 		}
 	}
 	printf("\n\n");
