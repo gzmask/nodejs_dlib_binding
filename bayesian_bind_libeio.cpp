@@ -1,5 +1,6 @@
 #include <v8.h>
 #include <node.h>
+#include <cstdlib>
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
