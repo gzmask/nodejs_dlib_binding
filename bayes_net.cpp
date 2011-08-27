@@ -65,13 +65,13 @@ char* bayesian_test(char * passed_courses) {
 	int arrayVarDoms[varCounter];//init array to store Domains
 	arrayVars = new char*[varCounter];
 	for (int i=0; i<varCounter; i++) { arrayVars[i] = NULL; } //init pointers
+
 	//var traversal
 	varCounter = 0;
 	for (xml_node<> *node = doc->first_node()->first_node()->first_node("VARIABLES")->first_node("VAR"); node; node = node->next_sibling()) {
 		for (xml_attribute<> *attr = node->first_attribute(); attr; attr = attr->next_attribute("NAME")) {
 			//printf("Node var has attribute %s ", attr->name()); printf("with value %s\n", attr->value());
 		}
-		//printf("Node VAR has value %s\n", node->first_node("FULLNAME")->value());
 		arrayVars[varCounter] = node->first_node("FULLNAME")->value(); //store var names into arrayVars
 		//get numbers of var domains
 		arrayVarDoms[varCounter] = 0;
@@ -83,18 +83,19 @@ char* bayesian_test(char * passed_courses) {
 	for (int i=0; i<varCounter; i++) { if (arrayVars[i]!=NULL) {printf("debug: arrayVars %s with dom %i\n",arrayVars[i], arrayVarDoms[i]);}}
 	printf("\n\n");
 
-	//read edges
+	//count edges
 	int edgeCounter = 0;
 	for (xml_node<> *node = doc->first_node()->first_node()->first_node("STRUCTURE")->first_node("ARC"); node; node = node->next_sibling()) {
 		edgeCounter++;
 	}
-	//array of edges as pairs of integers
+
+	//init array of edges as pairs of integers
 	int arrayEdges [edgeCounter*2];//[parent][child]...[parent][child]
 	edgeCounter = 0;
+
 	//store each end of the edges into arrayEdges 
 	for (xml_node<> *node = doc->first_node()->first_node()->first_node("STRUCTURE")->first_node("ARC"); node; node = node->next_sibling()) {
 		for (xml_attribute<> *attr = node->first_attribute(); attr; attr = attr->next_attribute()) {
-			//printf("Node arc has attribute %s ", attr->name()); printf("with value %s\n", attr->value());
 			if (strcmp(attr->name(),"PARENT")==0) {
 				for (int i = 0; i<varCounter; i++) {
 					if (strcmp(arrayVars[i], attr->value())==0)/*matches names in arrayVars*/ {arrayEdges[edgeCounter]=i/*var number*/;edgeCounter++;break;}
@@ -109,7 +110,29 @@ char* bayesian_test(char * passed_courses) {
 	for (int i=0; i<edgeCounter; i++) { printf("debug: arrayEdges %s\n", arrayVars[arrayEdges[i]]); }
 	printf("\n\n");
 
-	//read CPTs
+	//CPT struct linked-list
+	struct CPT {
+		int childVar;
+		int* indexArray;//indexes (y*width+x) array
+		int indexArrayWidth;
+		int indexArrayHeight;
+		float* probArray;//p values (y*width+x) array
+		int probArrayWidth;
+		int probArrayHeight;
+		CPT* next;
+	};
+	int cptCounter = 0; //counter
+
+	//count CPTs, init structs and (y*width+x) arrays
+	cptCounter = 0;
+	struct CPT firstCPT;
+	firstCPT.indexArray = new int[2*4];
+	delete firstCPT.indexArray;
+	for (xml_node<> *node = doc->first_node()->first_node()->first_node("DISTRIBUTIONS")->first_node("DIST"); node; node = node->next_sibling("DIST")) {
+		cptCounter++;
+	}
+
+	//CPT traversal 
 	for (xml_node<> *node = doc->first_node()->first_node()->first_node("DISTRIBUTIONS")->first_node("DIST"); node; node = node->next_sibling("DIST")) {
 		for (xml_attribute<> *attr = node->first_attribute(); attr; attr = attr->next_attribute()) {
 			printf("Node DIST has attribute %s ", attr->name());
@@ -118,10 +141,12 @@ char* bayesian_test(char * passed_courses) {
 		//read private variable
 		printf("Node PRIVATE has attribute %s ", node->first_node("PRIVATE")->first_attribute()->name());
 		printf("with value %s\n", node->first_node("PRIVATE")->first_attribute()->value());
+		for (int i=0; i<varCounter; i++) {
+			if (strcmp(node->first_node("PRIVATE")->first_attribute()->value(), arrayVars[i])==0) {/*give struct private var as i here*/;break;}			
+		}
 		//read condition variables, notice that some CPT don't have one
 		if (node->first_node("CONDSET")) {
 			for (xml_node<> *node_a = node->first_node("CONDSET")->first_node("CONDELEM"); node_a; node_a = node_a->next_sibling("CONDELEM")) {
-				//printf("Debug: %s\n", node_a->name());
 				printf("Node CONDELEM has attribute %s ", node_a->first_attribute()->name());
 				printf("with value %s\n", node_a->first_attribute()->value());
 			}
