@@ -160,6 +160,8 @@ char* bayesian_test(char * passed_courses) {
 			currCPT->indexArrayHeight = 1;
 			for (int j=0; j<(cptVarCounter-1); j++) {
 				currCPT->indexArrayHeight = currCPT->indexArrayHeight * arrayVarDoms[currCPT->vars[j]]/*number of domains of cpt var*/;}
+			currCPT->indexArray = new int[currCPT->indexArrayWidth * currCPT->indexArrayHeight];
+			//store indexes into currCPT->indexArray
 		}
 		//init probArray
 
@@ -199,6 +201,7 @@ char* bayesian_test(char * passed_courses) {
 			printf(" %s \n", node_a->value());
 		}
 	}*/
+
 	printf("\n\n");
 	//clean the mess
 	delete []arrayVars;
