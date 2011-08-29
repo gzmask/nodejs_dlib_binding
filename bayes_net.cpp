@@ -151,7 +151,6 @@ char* bayesian_test(char * passed_courses) {
 		} else {
 			currCPT->vars = new int[cptVarCounter];}
 		//store private variable
-		printf("debug:cptVarCounter: %i\n",cptVarCounter);
 		for (int i=0; i<varCounter; i++){
 			if (strcmp(arrayVars[i],node->first_node("PRIVATE")->first_attribute()->value())==0){currCPT->vars[cptVarCounter]=i;break;}}
 		//init indexArray if there is condition var
@@ -161,7 +160,25 @@ char* bayesian_test(char * passed_courses) {
 			for (int j=0; j<(cptVarCounter-1); j++) {
 				currCPT->indexArrayHeight = currCPT->indexArrayHeight * arrayVarDoms[currCPT->vars[j]]/*number of domains of cpt var*/;}
 			currCPT->indexArray = new int[currCPT->indexArrayWidth * currCPT->indexArrayHeight];
-			//store indexes into currCPT->indexArray
+			//store indexes into currCPT->indexArray[y*width+x]
+			int yCounter = 0;
+			for (xml_node<> *node_a = node->first_node("DPIS")->first_node("DPI"); node_a; node_a = node_a->next_sibling("DPI")) {
+				if (node_a->first_attribute()) {
+					char *pch;
+					pch = strtok(node_a->first_attribute()->value()," ");
+					int xCounter = 0;
+					while (pch != NULL) {
+						printf("%s\n",pch);
+						currCPT->indexArray[yCounter * currCPT->indexArrayWidth + xCounter]=atoi(pch);
+						pch = strtok(NULL, " ");
+						xCounter++;
+					}
+				}
+			printf("Node %s has value ", node_a->name());
+			printf(" %s \n", node_a->value());
+			yCounter++;
+			}
+			printf("debug:currCPT->indexArraysize: %i\n",currCPT->indexArrayWidth * currCPT->indexArrayHeight);
 		}
 		//init probArray
 
