@@ -21,7 +21,7 @@ MS Bayesian Network XML Paring README, after the parsing is done, there are stru
 
 
 	arrayEdges[] is the array for all edges listed as [parent][child]...[parent][child]
-	edgeCounter is the total number of edges
+	edgeCounter is the twice of the total number of edges, it actually represents nodes
 
 	firstCPT is the head of the linked list for CPTs
 	CPT.vars is the variables as int for each CPT, accessed by p(Vn|V1,V2...,Vn-1)
@@ -209,9 +209,16 @@ char* bayesian_test(char *passed_courses) {
 		printf("\n\n");
 	}
 
+
 	//the dlib bayesian inference
     using namespace bayes_node_utils;
     directed_graph<bayes_node>::kernel_1a_c bn;
+    bn.set_number_of_nodes(varCounter);
+	
+	for (int i=0; i<edgeCounter; i=i+2) {
+		printf("%i\n",i);
+		bn.add_edge(arrayEdges[i],arrayEdges[i+1]);
+	}
 
 
 	//clean the mess
