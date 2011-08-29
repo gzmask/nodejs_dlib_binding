@@ -12,6 +12,25 @@ using namespace rapidxml;
 using namespace dlib;
 using namespace std;
 
+/*********************************************************************************
+MS Bayesian Network XML Paring README, after the parsing is done, there are structures left as result:
+
+	arrayVars[each variable as integer] = a string of the variable name
+	arrayVarDoms[each variable as integer] = number of domains for this variable
+	varCounter is the total number of variables
+
+
+	arrayEdges[] is the array for all edges listed as [parent][child]...[parent][child]
+	edgeCounter is the total number of edges
+
+	firstCPT is the head of the linked list for CPTs
+	CPT.vars is the variables as int for each CPT, accessed by p(Vn|V1,V2...,Vn-1)
+	CPT.indexArray[] is the array for all index variables for each CPT as int, accessed by [y*width+x]
+	CPT.probArray[] is the array for all probability values for each CPT as float, accessed by [y*width+x]
+	And these: CPT.indexArrayWidth CPT.indexArrayHeight CPT.probArrayWidth CPT.probArrayHeight
+	cptCounter is the totoal number of CPTs
+
+*********************************************************************************/
 
 //recursively free CPT struct memory
 bool freeCPT(struct CPT *aCPT) {
@@ -33,20 +52,6 @@ bool freeCPT(struct CPT *aCPT) {
 char* bayesian_test(char *passed_courses) {
 	char* resstr = (char*)malloc(sizeof(char)*256);
 	strcat(resstr, "testing");
-    // There are many useful convenience functions in this namespace.  They all
-    // perform simple access or modify operations on the nodes of a bayesian network. 
-    // You don't have to use them but they are convenient and they also will check for
-    // various errors in your bayesian network when your application is built with
-    // the DEBUG or ENABLE_ASSERTS preprocessor definitions defined.  So their use
-    // is recommended.  In fact, most of the global functions used in this example 
-    // program are from this namespace.
-    //using namespace bayes_node_utils;
-
-    // This statement declares a bayesian network called bn.  Note that a bayesian network
-    // in the dlib world is just a directed_graph object that contains a special kind 
-    // of node called a bayes_node.
-    //directed_graph<bayes_node>::kernel_1a_c bn;
-
 
 	//this is the code block that reads the ???.xbn file
 	char* line_str = (char*)malloc(sizeof(char)*256);//released at :50
@@ -203,6 +208,11 @@ char* bayesian_test(char *passed_courses) {
 		cptCounter++;
 		printf("\n\n");
 	}
+
+	//the dlib bayesian inference
+    using namespace bayes_node_utils;
+    directed_graph<bayes_node>::kernel_1a_c bn;
+
 
 	//clean the mess
 	delete []arrayVars;
