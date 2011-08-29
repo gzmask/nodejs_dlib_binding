@@ -7,14 +7,32 @@
 #include <string>
 #include <string.h>
 #include "rapidxml/rapidxml.hpp"
+#include "bayes_net.h"
 using namespace rapidxml;
 using namespace dlib;
 using namespace std;
 
-#include "bayes_net.h"
 
-// ----------------------------------------------------------------------------------------
-char* bayesian_test(char * passed_courses) {
+//recursively free CPT struct memory
+bool freeCPT(struct CPT *aCPT) {
+	if (aCPT->next == NULL) { 
+		free(aCPT);
+		return true; 
+	} else if (freeCPT(aCPT->next)) {
+		delete []aCPT->vars;
+		delete []aCPT->indexArray;
+		delete []aCPT->probArray;
+		free(aCPT);
+		return true;
+	} else {
+		return false;
+	}
+}
+
+//main function
+char* bayesian_test(char *passed_courses) {
+	char* resstr = (char*)malloc(sizeof(char)*256);
+	strcat(resstr, "testing");
     // There are many useful convenience functions in this namespace.  They all
     // perform simple access or modify operations on the nodes of a bayesian network. 
     // You don't have to use them but they are convenient and they also will check for
@@ -31,8 +49,8 @@ char* bayesian_test(char * passed_courses) {
 
 
 	//this is the code block that reads the ???.xbn file
-	char* line_str = (char*)malloc(sizeof(char)*256);
-	char* block_str = new char[4096];
+	char* line_str = (char*)malloc(sizeof(char)*256);//released at :50
+	char* block_str = new char[4096];//released at :55
 	const char xbn_filename[] = "input.xbn";
 	std::ifstream xbn_file (xbn_filename);
 	if (xbn_file.is_open()) {
@@ -45,15 +63,13 @@ char* bayesian_test(char * passed_courses) {
 		}
 		xbn_file.close();
 	}
-	printf("the length of block_str is: %i \n", (int)strlen(block_str));
-	printf("%s", block_str);
 	free(line_str);
 
 	//parsing xml using rapidxml
-	xml_document<>* doc = new xml_document<>();
+	xml_document<>* doc = new xml_document<>();//released at :206
 	doc->parse<0>(block_str);
 	delete [] block_str;
-	printf("Name of first node is %s.\n", doc->first_node()->first_node()->first_node("VARIABLES")->first_node("VAR")->name());
+	//printf("Name of first node is %s.\n", doc->first_node()->first_node()->first_node("VARIABLES")->first_node("VAR")->name());
 
 	//read variables and their domains (number of outcomes)
 	//pointer of an array of char* pointers
@@ -63,7 +79,7 @@ char* bayesian_test(char * passed_courses) {
 		varCounter++;
 	}
 	int arrayVarDoms[varCounter];//init array to store Domains
-	arrayVars = new char*[varCounter];
+	arrayVars = new char*[varCounter];//released at :205
 	for (int i=0; i<varCounter; i++) { arrayVars[i] = NULL; } //init pointers
 
 	//var traversal
@@ -80,8 +96,8 @@ char* bayesian_test(char * passed_courses) {
 		}
 		varCounter++;
 	}
-	for (int i=0; i<varCounter; i++) { if (arrayVars[i]!=NULL) {printf("debug: arrayVars %s with dom %i\n",arrayVars[i], arrayVarDoms[i]);}}
-	printf("\n\n");
+	//for (int i=0; i<varCounter; i++) { if (arrayVars[i]!=NULL) {printf("debug: arrayVars %s with dom %i\n",arrayVars[i], arrayVarDoms[i]);}}
+	//printf("\n\n");
 
 	//count edges
 	int edgeCounter = 0;
@@ -107,26 +123,13 @@ char* bayesian_test(char * passed_courses) {
 			}
 		}
 	}
-	for (int i=0; i<edgeCounter; i++) { printf("debug: arrayEdges %s\n", arrayVars[arrayEdges[i]]); }
-	printf("\n\n");
+	//for (int i=0; i<edgeCounter; i++) { printf("debug: arrayEdges %s\n", arrayVars[arrayEdges[i]]); }
+	//printf("\n\n");
 
-	//CPT struct linked-list
-	struct CPT {
-		int* vars;//p(vn|v1,v2,...)
-		int* indexArray;//indexes (y*width+x) array
-		int indexArrayWidth;
-		int indexArrayHeight;
-		float* probArray;//p values (y*width+x) array
-		int probArrayWidth;
-		int probArrayHeight;
-		CPT* next;
-	};
 	int cptCounter = 0; //counter
 
 	//count CPTs, init structs and (y*width+x) arrays
 	cptCounter = 0;
-	//firstCPT.indexArray = new int[2*4];
-	//delete firstCPT.indexArray;
 	struct CPT firstCPT;
 	struct CPT *currCPT = &firstCPT;  	
 	for (xml_node<> *node = doc->first_node()->first_node()->first_node("DISTRIBUTIONS")->first_node("DIST"); node; node = node->next_sibling("DIST")) 
@@ -153,78 +156,63 @@ char* bayesian_test(char * passed_courses) {
 		//store private variable
 		for (int i=0; i<varCounter; i++){
 			if (strcmp(arrayVars[i],node->first_node("PRIVATE")->first_attribute()->value())==0){currCPT->vars[cptVarCounter]=i;break;}}
-		//init indexArray if there is condition var
+		//init indexArray
+		currCPT->indexArray = NULL;
+		currCPT->indexArrayWidth = cptVarCounter-1;
+		currCPT->indexArrayHeight = 1;
+		for (int j=0; j<(cptVarCounter-1); j++) {
+			currCPT->indexArrayHeight = currCPT->indexArrayHeight * arrayVarDoms[currCPT->vars[j]]/*number of domains of cpt var*/;}
 		if (node->first_node("CONDSET")) {
-			currCPT->indexArrayWidth = cptVarCounter-1;
-			currCPT->indexArrayHeight = 1;
-			for (int j=0; j<(cptVarCounter-1); j++) {
-				currCPT->indexArrayHeight = currCPT->indexArrayHeight * arrayVarDoms[currCPT->vars[j]]/*number of domains of cpt var*/;}
 			currCPT->indexArray = new int[currCPT->indexArrayWidth * currCPT->indexArrayHeight];
-			//store indexes into currCPT->indexArray[y*width+x]
-			int yCounter = 0;
-			for (xml_node<> *node_a = node->first_node("DPIS")->first_node("DPI"); node_a; node_a = node_a->next_sibling("DPI")) {
-				if (node_a->first_attribute()) {
-					char *pch;
-					pch = strtok(node_a->first_attribute()->value()," ");
-					int xCounter = 0;
-					while (pch != NULL) {
-						printf("%s\n",pch);
-						currCPT->indexArray[yCounter * currCPT->indexArrayWidth + xCounter]=atoi(pch);
-						pch = strtok(NULL, " ");
-						xCounter++;
-					}
-				}
-			printf("Node %s has value ", node_a->name());
-			printf(" %s \n", node_a->value());
-			yCounter++;
-			}
-			printf("debug:currCPT->indexArraysize: %i\n",currCPT->indexArrayWidth * currCPT->indexArrayHeight);
 		}
 		//init probArray
+		currCPT->probArrayWidth = arrayVarDoms[currCPT->vars[cptVarCounter]];
+		currCPT->probArrayHeight = currCPT->indexArrayHeight;
+		currCPT->probArray = new float[currCPT->probArrayWidth * currCPT->probArrayHeight];
+		//store indexes into currCPT->indexArray[y*width+x]
+		int yCounter = 0;
+		for (xml_node<> *node_a = node->first_node("DPIS")->first_node("DPI"); node_a; node_a = node_a->next_sibling("DPI")) {
+			if (node_a->first_attribute()) {
+				char *pch;
+				pch = strtok(node_a->first_attribute()->value()," ");
+				int xCounter = 0;
+				while (pch != NULL) {
+					currCPT->indexArray[yCounter * currCPT->indexArrayWidth + xCounter]=atoi(pch);
+					pch = strtok(NULL, " ");
+					xCounter++;
+				}
+			}
+			//store probArray
+			char *ppch;
+			ppch = strtok(node_a->value()," ");
+			int xxCounter = 0;
+			while (ppch != NULL) {
+				currCPT->probArray[yCounter * currCPT->probArrayWidth + xxCounter]=atof(ppch);
+				ppch = strtok(NULL, " ");
+				xxCounter++;
+			}
+			yCounter++;
+		}
+		for (int k=0; k<(currCPT->indexArrayWidth * currCPT->indexArrayHeight); k++) {printf("debug: currCPT->indexArray: %i\n",currCPT->indexArray[k]);}
+		for (int k=0; k<(currCPT->probArrayWidth * currCPT->probArrayHeight); k++) {printf("debug: currCPT->probArray: %f\n",currCPT->probArray[k]);}
 
 		//init next CPT struct
 		currCPT->next = (struct CPT*)malloc(sizeof(struct CPT));
 		currCPT = currCPT->next;
+		currCPT->next = NULL;
 		cptCounter++;
+		printf("\n\n");
 	}
 
-	/*/CPT traversal 
-	for (xml_node<> *node = doc->first_node()->first_node()->first_node("DISTRIBUTIONS")->first_node("DIST"); node; node = node->next_sibling("DIST")) 
-	{
-		for (xml_attribute<> *attr = node->first_attribute(); attr; attr = attr->next_attribute()) {
-			printf("Node DIST has attribute %s ", attr->name());
-			printf("with value %s\n", attr->value());
-		}
-		//read private variable
-		printf("Node PRIVATE has attribute %s ", node->first_node("PRIVATE")->first_attribute()->name());
-		printf("with value %s\n", node->first_node("PRIVATE")->first_attribute()->value());
-		for (int i=0; i<varCounter; i++) {
-			if (strcmp(node->first_node("PRIVATE")->first_attribute()->value(), arrayVars[i])==0) {*//*give struct private var as i here*//*;break;}
-		}
-		//read condition variables, notice that some CPT don't have one
-		if (node->first_node("CONDSET")) {
-			for (xml_node<> *node_a = node->first_node("CONDSET")->first_node("CONDELEM"); node_a; node_a = node_a->next_sibling("CONDELEM")) {
-				printf("Node CONDELEM has attribute %s ", node_a->first_attribute()->name());
-				printf("with value %s\n", node_a->first_attribute()->value());
-			}
-		}
-		//read DPI values
-		for (xml_node<> *node_a = node->first_node("DPIS")->first_node("DPI"); node_a; node_a = node_a->next_sibling("DPI")) {
-			if (node_a->first_attribute()) {
-				printf("Node DPI has attribute %s ", node_a->first_attribute()->name());
-				printf("with value %s\n", node_a->first_attribute()->value());
-			}
-			printf("Node %s has value ", node_a->name());
-			printf(" %s \n", node_a->value());
-		}
-	}*/
-
-	printf("\n\n");
 	//clean the mess
 	delete []arrayVars;
 	delete doc;
-
-	char* aCString = (char *)malloc(strlen(aCString)+1);
-	strcpy(aCString, "fuckyouc");
-	return aCString;
+	//release the linked list CPT struct using recursive function freeCPT(), and you can't free an auto var!
+	freeCPT(firstCPT.next);
+	delete []firstCPT.vars;
+	delete []firstCPT.indexArray;
+	delete []firstCPT.probArray;
+	
+	return resstr;
 }
+
