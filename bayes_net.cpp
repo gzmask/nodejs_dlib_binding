@@ -19,7 +19,6 @@ MS Bayesian Network XML Paring README, after the parsing is done, there are stru
 	arrayVarDoms[each variable as integer] = number of domains for this variable
 	varCounter is the total number of variables
 
-
 	arrayEdges[] is the array for all edges listed as [parent][child]...[parent][child]
 	edgeCounter is the twice of the total number of edges, it actually represents nodes
 
@@ -28,6 +27,7 @@ MS Bayesian Network XML Paring README, after the parsing is done, there are stru
 	CPT.indexArray[] is the array for all index variables for each CPT as int, accessed by [y*width+x]
 	CPT.probArray[] is the array for all probability values for each CPT as float, accessed by [y*width+x]
 	And these: CPT.indexArrayWidth CPT.indexArrayHeight CPT.probArrayWidth CPT.probArrayHeight
+	Warning: total numbers of vars is indexArrayWidth+1 !
 	cptCounter is the totoal number of CPTs
 
 *********************************************************************************/
@@ -128,8 +128,6 @@ char* bayesian_test(char *passed_courses) {
 			}
 		}
 	}
-	//for (int i=0; i<edgeCounter; i++) { printf("debug: arrayEdges %s\n", arrayVars[arrayEdges[i]]); }
-	//printf("\n\n");
 
 	int cptCounter = 0; //counter
 
@@ -153,6 +151,7 @@ char* bayesian_test(char *passed_courses) {
 			for (xml_node<> *node_a = node->first_node("CONDSET")->first_node("CONDELEM"); node_a; node_a = node_a->next_sibling("CONDELEM")) {
 				for (int i=0; i<varCounter; i++) {
 					if (strcmp(node_a->first_attribute()->value(),arrayVars[i])==0){currCPT->vars[cptVarCounter]=i;break;}}
+				//cout<<"parents "<<node_a->first_attribute()->value()<<arrayVars[currCPT->vars[cptVarCounter]]<<endl;
 				cptVarCounter++;
 			}
 			cptVarCounter++;//add private var count
@@ -160,7 +159,8 @@ char* bayesian_test(char *passed_courses) {
 			currCPT->vars = new int[cptVarCounter];}
 		//store private variable
 		for (int i=0; i<varCounter; i++){
-			if (strcmp(arrayVars[i],node->first_node("PRIVATE")->first_attribute()->value())==0){currCPT->vars[cptVarCounter]=i;break;}}
+			if (strcmp(arrayVars[i],node->first_node("PRIVATE")->first_attribute()->value())==0){currCPT->vars[cptVarCounter-1]=i;break;}}
+		//cout<<"child "<<node->first_node("PRIVATE")->first_attribute()->value()<<currCPT->vars[cptVarCounter-1]<<endl;
 		//init indexArray
 		currCPT->indexArray = NULL;
 		currCPT->indexArrayWidth = cptVarCounter-1;
@@ -171,7 +171,7 @@ char* bayesian_test(char *passed_courses) {
 			currCPT->indexArray = new int[currCPT->indexArrayWidth * currCPT->indexArrayHeight];
 		}
 		//init probArray
-		currCPT->probArrayWidth = arrayVarDoms[currCPT->vars[cptVarCounter]];
+		currCPT->probArrayWidth = arrayVarDoms[currCPT->vars[cptVarCounter-1]];
 		currCPT->probArrayHeight = currCPT->indexArrayHeight;
 		currCPT->probArray = new float[currCPT->probArrayWidth * currCPT->probArrayHeight];
 		//store indexes into currCPT->indexArray[y*width+x]
@@ -198,15 +198,12 @@ char* bayesian_test(char *passed_courses) {
 			}
 			yCounter++;
 		}
-		for (int k=0; k<(currCPT->indexArrayWidth * currCPT->indexArrayHeight); k++) {printf("debug: currCPT->indexArray: %i\n",currCPT->indexArray[k]);}
-		for (int k=0; k<(currCPT->probArrayWidth * currCPT->probArrayHeight); k++) {printf("debug: currCPT->probArray: %f\n",currCPT->probArray[k]);}
-
+		//for (int k=0; k<(currCPT->indexArrayWidth+1); k++) {printf("debug: currCPT->vars: %s\n",arrayVars[currCPT->vars[k]]);}
 		//init next CPT struct
 		currCPT->next = (struct CPT*)malloc(sizeof(struct CPT));
 		currCPT = currCPT->next;
 		currCPT->next = NULL;
 		cptCounter++;
-		printf("\n\n");
 	}
 
 
@@ -214,12 +211,33 @@ char* bayesian_test(char *passed_courses) {
     using namespace bayes_node_utils;
     directed_graph<bayes_node>::kernel_1a_c bn;
     bn.set_number_of_nodes(varCounter);
-	
+	//add edges	
 	for (int i=0; i<edgeCounter; i=i+2) {
-		printf("%i\n",i);
 		bn.add_edge(arrayEdges[i],arrayEdges[i+1]);
 	}
+	//add domains	
+	for (int i=0; i<varCounter; i++) {
+		set_node_num_values(bn, i, arrayVarDoms[i]);
+	}
 
+	assignment parent_state;
+	//add CPTs
+	currCPT = &firstCPT;
+	while (currCPT->next != NULL)
+	{
+		//child node: currCPT->vars[currCPT->indexArrayWidth]
+		cout<<arrayVars[currCPT->vars[currCPT->indexArrayWidth]]<<endl;
+		currCPT = currCPT->next;
+	}
+	/*foreach cpt in CPT 
+	{
+		foreach doms in cpt.vars[cpt.width-1]	
+		{
+			set_node_probability(bn, cs110, dom, parent_state, 0.5);
+			set_node_probability(bn, cs110, dom, parent_state, 0.5);
+		}
+	}
+	*/
 
 	//clean the mess
 	delete []arrayVars;
