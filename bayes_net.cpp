@@ -211,10 +211,12 @@ char* bayesian_test(char *passed_courses) {
     using namespace bayes_node_utils;
     directed_graph<bayes_node>::kernel_1a_c bn;
     bn.set_number_of_nodes(varCounter);
+
 	//add edges	
 	for (int i=0; i<edgeCounter; i=i+2) {
 		bn.add_edge(arrayEdges[i],arrayEdges[i+1]);
 	}
+
 	//add domains	
 	for (int i=0; i<varCounter; i++) {
 		set_node_num_values(bn, i, arrayVarDoms[i]);
@@ -223,21 +225,41 @@ char* bayesian_test(char *passed_courses) {
 	assignment parent_state;
 	//add CPTs
 	currCPT = &firstCPT;
-	while (currCPT->next != NULL)
-	{
+	/*foreach CPT*/while (currCPT->next != NULL) {
 		//child node: currCPT->vars[currCPT->indexArrayWidth]
-		cout<<arrayVars[currCPT->vars[currCPT->indexArrayWidth]]<<endl;
+		cout<<"parent_state.clear();"<<endl;
+		parent_state.clear();
+		/*foreach parent node of this child node*/for (int i=0; i<currCPT->indexArrayWidth; i++) {
+			//parent node: currCPT->vars[i]
+			cout<<"parent_state.add("<<arrayVars[currCPT->vars[i]]<<");"<<endl;
+			parent_state.add(currCPT->vars[i]);
+		}
+		/*foreach row of indexArray and probArray*/for (int i=0; i<currCPT->indexArrayHeight; i++) {
+			/*foreach configuration of index vars*/for (int j=0; j<currCPT->indexArrayWidth; j++) {
+				cout<<"parent_state["<<arrayVars[currCPT->vars[j]]<<"] = "<<currCPT->indexArray[i*currCPT->indexArrayWidth+j]<<endl;;
+				parent_state[currCPT->vars[j]] = currCPT->indexArray[i*currCPT->indexArrayWidth+j];
+			}
+			/*foreach dom of probArray*/for (int k=0; k<currCPT->probArrayWidth; k++) {
+				cout<<"set_node_probability(bn, "<<arrayVars[currCPT->vars[currCPT->indexArrayWidth]]<<", "<<k<<", parent_state, "<<currCPT->probArray[i*currCPT->probArrayWidth+k]<<")"<<endl;
+				set_node_probability(bn, currCPT->vars[currCPT->indexArrayWidth], k, parent_state, currCPT->probArray[i*currCPT->probArrayWidth+k]);
+			}
+			cout<<endl;
+		}
 		currCPT = currCPT->next;
 	}
-	/*foreach cpt in CPT 
-	{
-		foreach doms in cpt.vars[cpt.width-1]	
-		{
-			set_node_probability(bn, cs110, dom, parent_state, 0.5);
-			set_node_probability(bn, cs110, dom, parent_state, 0.5);
-		}
+
+	//setup join tree
+    typedef set<unsigned long>::compare_1b_c set_type;
+    typedef graph<set_type, set_type>::kernel_1a_c join_tree_type;
+    join_tree_type join_tree;
+    create_moral_graph(bn, join_tree);
+    create_join_tree(join_tree, join_tree);
+    bayesian_network_join_tree solution(bn, join_tree);
+
+	//print prior probs
+	/*foreach variables*/for (int i=0; i<varCounter; i++) {
+		cout<<arrayVars[i]<<solution.probability(i)(1)<<endl;	
 	}
-	*/
 
 	//clean the mess
 	delete []arrayVars;
