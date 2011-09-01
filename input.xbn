@@ -1,105 +1,387 @@
 <?xml version="1.0"?>
 <ANALYSISNOTEBOOK NAME="Notebook.bndefault" ROOT="bndefault">
-<BNMODEL NAME="bndefault">
-	<STATICPROPERTIES><FORMAT>MSR DTAS XML</FORMAT>
-		<VERSION>1.0</VERSION>
-		<CREATOR>Microsoft Research DTAS</CREATOR>
-	</STATICPROPERTIES>
-	<DYNAMICPROPERTIES>
-		<PROPERTYTYPE NAME="DTASDG_Notes" TYPE="stringarray">
-			<COMMENT>Notes on the diagram</COMMENT>
-		</PROPERTYTYPE>
-		<PROPERTYTYPE NAME="MS_Addins" TYPE="stringarray"/>
-	</DYNAMICPROPERTIES>
-
-	<VARIABLES>
-		<VAR NAME="Burglary" TYPE="discrete" XPOS="0" YPOS="2500">
-			<FULLNAME>Burglary</FULLNAME>
-			<STATENAME>Yes</STATENAME>
-			<STATENAME>No</STATENAME>
-		</VAR>
-		<VAR NAME="Alarm" TYPE="discrete" XPOS="3250" YPOS="7500">
-			<FULLNAME>Alarm</FULLNAME>
-			<STATENAME>Yes</STATENAME>
-			<STATENAME>No</STATENAME>
-		</VAR>
-		<VAR NAME="JohnCalls" TYPE="discrete" XPOS="0" YPOS="12500">
-			<FULLNAME>JohnCalls</FULLNAME>
-			<STATENAME>Yes</STATENAME>
-			<STATENAME>No</STATENAME>
-		</VAR>
-		<VAR NAME="MaryCalls" TYPE="discrete" XPOS="6500" YPOS="12500">
-			<FULLNAME>MaryCalls</FULLNAME>
-			<STATENAME>Yes</STATENAME>
-			<STATENAME>No</STATENAME>
-		</VAR>
-		<VAR NAME="Earthquake" TYPE="discrete" XPOS="6500" YPOS="2500">
-			<FULLNAME>Earthquake</FULLNAME>
-			<STATENAME>Yes</STATENAME>
-			<STATENAME>No</STATENAME>
-		</VAR>
-	</VARIABLES>
-
-	<STRUCTURE>
-		<ARC PARENT="Burglary" CHILD="Alarm"/>
-		<ARC PARENT="Earthquake" CHILD="Alarm"/>
-		<ARC PARENT="Alarm" CHILD="JohnCalls"/>
-		<ARC PARENT="Alarm" CHILD="MaryCalls"/>
-	</STRUCTURE>
-
-	<DISTRIBUTIONS>
-
-		<DIST TYPE="discrete">
-			<PRIVATE NAME="Alarm"/>
-			<CONDSET>
-				<CONDELEM NAME="Burglary"/>    
-				<CONDELEM NAME="Earthquake"/>  
-			</CONDSET>
-			<DPIS>
-				<DPI INDEXES="0 0 ">0.95 0.05 </DPI>
-				<DPI INDEXES="0 1 ">0.94 0.06 </DPI>
-				<DPI INDEXES="1 0 ">0.29 0.71 </DPI>
-				<DPI INDEXES="1 1 ">0.001 0.999 </DPI>
-			</DPIS>
-		</DIST>
-
-		<DIST TYPE="discrete">
-			<PRIVATE NAME="JohnCalls"/>
-			<CONDSET>
-				<CONDELEM NAME="Alarm"/>  
-			</CONDSET>
-			<DPIS>
-				<DPI INDEXES="0 ">0.9 0.1 </DPI>
-				<DPI INDEXES="1 ">0.05 0.95 </DPI>
-			</DPIS>
-		</DIST>
-
-		<DIST TYPE="discrete">
-			<PRIVATE NAME="MaryCalls"/>
-			<CONDSET>
-				<CONDELEM NAME="Alarm"/>  
-			</CONDSET>
-			<DPIS>
-				<DPI INDEXES="0 ">0.7 0.3 </DPI>
-				<DPI INDEXES="1 ">0.01 0.99 </DPI>
-			</DPIS>
-		</DIST>
-
-		<DIST TYPE="discrete">
-			<PRIVATE NAME="Burglary"/>
-			<DPIS>
-				<DPI>0.001 0.999 </DPI>
-			</DPIS>
-		</DIST>
-
-		<DIST TYPE="discrete">
-			<PRIVATE NAME="Earthquake"/>
-			<DPIS>
-				<DPI>0.002 0.998 </DPI>
-			</DPIS>
-		</DIST>
-
-	</DISTRIBUTIONS>
-
-</BNMODEL>
-</ANALYSISNOTEBOOK>
+  <BNMODEL NAME="bndefault"><STATICPROPERTIES><FORMAT>MSR DTAS XML</FORMAT>
+        <VERSION>1.0</VERSION>
+        <CREATOR>Microsoft Research DTAS</CREATOR>
+        </STATICPROPERTIES>
+      <DYNAMICPROPERTIES><PROPERTYTYPE NAME="DTASDG_Notes" TYPE="stringarray"><COMMENT>Notes on the diagram</COMMENT>
+          </PROPERTYTYPE>
+        <PROPERTYTYPE NAME="MS_Addins" TYPE="stringarray"/>
+        </DYNAMICPROPERTIES>
+      <VARIABLES><VAR NAME="Cs100" TYPE="discrete" XPOS="14845" YPOS="-4527"><FULLNAME>cs100</FULLNAME>
+          <STATENAME>Yes</STATENAME>
+          <STATENAME>No</STATENAME>
+          </VAR>
+        <VAR NAME="Cs110" TYPE="discrete" XPOS="8713" YPOS="-4521"><FULLNAME>cs110</FULLNAME>
+          <STATENAME>Yes</STATENAME>
+          <STATENAME>No</STATENAME>
+          </VAR>
+        <VAR NAME="Cs115" TYPE="discrete" XPOS="17214" YPOS="4489"><FULLNAME>cs115</FULLNAME>
+          <STATENAME>Yes</STATENAME>
+          <STATENAME>No</STATENAME>
+          </VAR>
+        <VAR NAME="Cs201" TYPE="discrete" XPOS="2854" YPOS="4541"><FULLNAME>cs201</FULLNAME>
+          <STATENAME>Yes</STATENAME>
+          <STATENAME>No</STATENAME>
+          </VAR>
+        <VAR NAME="Cs203" TYPE="discrete" XPOS="13738" YPOS="7140"><FULLNAME>cs203</FULLNAME>
+          <STATENAME>Yes</STATENAME>
+          <STATENAME>No</STATENAME>
+          </VAR>
+        <VAR NAME="Cs207" TYPE="discrete" XPOS="8929" YPOS="4553"><FULLNAME>cs207</FULLNAME>
+          <STATENAME>Yes</STATENAME>
+          <STATENAME>No</STATENAME>
+          </VAR>
+        <VAR NAME="Cs210" TYPE="discrete" XPOS="19414" YPOS="12314"><FULLNAME>cs210</FULLNAME>
+          <STATENAME>Yes</STATENAME>
+          <STATENAME>No</STATENAME>
+          </VAR>
+        <VAR NAME="Cs215" TYPE="discrete" XPOS="1779" YPOS="19517"><FULLNAME>cs215</FULLNAME>
+          <STATENAME>Yes</STATENAME>
+          <STATENAME>No</STATENAME>
+          </VAR>
+        <VAR NAME="Cs261" TYPE="discrete" XPOS="33143" YPOS="4594"><FULLNAME>cs261</FULLNAME>
+          <STATENAME>Yes</STATENAME>
+          <STATENAME>No</STATENAME>
+          </VAR>
+        <VAR NAME="Cs270" TYPE="discrete" XPOS="25929" YPOS="4577"><FULLNAME>cs270</FULLNAME>
+          <STATENAME>Yes</STATENAME>
+          <STATENAME>No</STATENAME>
+          </VAR>
+        <VAR NAME="Cs271" TYPE="discrete" XPOS="24059" YPOS="8346"><FULLNAME>cs271</FULLNAME>
+          <STATENAME>Yes</STATENAME>
+          <STATENAME>No</STATENAME>
+          </VAR>
+        <VAR NAME="Cs280" TYPE="discrete" XPOS="41033" YPOS="4768"><FULLNAME>cs280</FULLNAME>
+          <STATENAME>Yes</STATENAME>
+          <STATENAME>No</STATENAME>
+          </VAR>
+        <VAR NAME="Cs301" TYPE="discrete" XPOS="2779" YPOS="8259"><FULLNAME>cs301</FULLNAME>
+          <STATENAME>Yes</STATENAME>
+          <STATENAME>No</STATENAME>
+          </VAR>
+        <VAR NAME="Cs310" TYPE="discrete" XPOS="8257" YPOS="19459"><FULLNAME>cs310</FULLNAME>
+          <STATENAME>Yes</STATENAME>
+          <STATENAME>No</STATENAME>
+          </VAR>
+        <VAR NAME="Cs315" TYPE="discrete" XPOS="14615" YPOS="19435"><FULLNAME>cs315</FULLNAME>
+          <STATENAME>Yes</STATENAME>
+          <STATENAME>No</STATENAME>
+          </VAR>
+        <VAR NAME="Cs320" TYPE="discrete" XPOS="21294" YPOS="19400"><FULLNAME>cs320</FULLNAME>
+          <STATENAME>Yes</STATENAME>
+          <STATENAME>No</STATENAME>
+          </VAR>
+        <VAR NAME="Cs327" TYPE="discrete" XPOS="10859" YPOS="12314"><FULLNAME>cs327</FULLNAME>
+          <STATENAME>Yes</STATENAME>
+          <STATENAME>No</STATENAME>
+          </VAR>
+        <VAR NAME="Cs330" TYPE="discrete" XPOS="27414" YPOS="19398"><FULLNAME>cs330</FULLNAME>
+          <STATENAME>Yes</STATENAME>
+          <STATENAME>No</STATENAME>
+          </VAR>
+        <VAR NAME="Cs335" TYPE="discrete" XPOS="33911" YPOS="19398"><FULLNAME>cs335</FULLNAME>
+          <STATENAME>Yes</STATENAME>
+          <STATENAME>No</STATENAME>
+          </VAR>
+        <VAR NAME="Cs340" TYPE="discrete" XPOS="40214" YPOS="19242"><FULLNAME>cs340</FULLNAME>
+          <STATENAME>Yes</STATENAME>
+          <STATENAME>No</STATENAME>
+          </VAR>
+        <VAR NAME="Cs350" TYPE="discrete" XPOS="46673" YPOS="19164"><FULLNAME>cs350</FULLNAME>
+          <STATENAME>Yes</STATENAME>
+          <STATENAME>No</STATENAME>
+          </VAR>
+        <VAR NAME="Cs360" TYPE="discrete" XPOS="33259" YPOS="8493"><FULLNAME>cs360</FULLNAME>
+          <STATENAME>Yes</STATENAME>
+          <STATENAME>No</STATENAME>
+          </VAR>
+        <VAR NAME="Cs401" TYPE="discrete" XPOS="2392" YPOS="12400"><FULLNAME>cs401</FULLNAME>
+          <STATENAME>Yes</STATENAME>
+          <STATENAME>No</STATENAME>
+          </VAR>
+        <VAR NAME="Cs461" TYPE="discrete" XPOS="33379" YPOS="12344"><FULLNAME>cs461</FULLNAME>
+          <STATENAME>Yes</STATENAME>
+          <STATENAME>No</STATENAME>
+          </VAR>
+        <VAR NAME="Engl100" TYPE="discrete" XPOS="21029" YPOS="-4501"><FULLNAME>engl100</FULLNAME>
+          <STATENAME>Yes</STATENAME>
+          <STATENAME>No</STATENAME>
+          </VAR>
+        <VAR NAME="Has60credit" TYPE="discrete" XPOS="2569" YPOS="-4531"><FULLNAME>has60credit</FULLNAME>
+          <STATENAME>Yes</STATENAME>
+          <STATENAME>No</STATENAME>
+          </VAR>
+        <VAR NAME="Math105" TYPE="discrete" XPOS="27317" YPOS="-4501"><FULLNAME>math105</FULLNAME>
+          <STATENAME>Yes</STATENAME>
+          <STATENAME>No</STATENAME>
+          </VAR>
+        <VAR NAME="Math110" TYPE="discrete" XPOS="33673" YPOS="-4414"><FULLNAME>math110</FULLNAME>
+          <STATENAME>Yes</STATENAME>
+          <STATENAME>No</STATENAME>
+          </VAR>
+        <VAR NAME="Math111" TYPE="discrete" XPOS="39755" YPOS="-4472"><FULLNAME>math111</FULLNAME>
+          <STATENAME>Yes</STATENAME>
+          <STATENAME>No</STATENAME>
+          </VAR>
+        <VAR NAME="Math122" TYPE="discrete" XPOS="46107" YPOS="-4473"><FULLNAME>math122</FULLNAME>
+          <STATENAME>Yes</STATENAME>
+          <STATENAME>No</STATENAME>
+          </VAR>
+        </VARIABLES>
+      <STRUCTURE><ARC PARENT="Cs110" CHILD="Cs115"/>
+        <ARC PARENT="Math105" CHILD="Cs115"/>
+        <ARC PARENT="Math110" CHILD="Cs115"/>
+        <ARC PARENT="Cs110" CHILD="Cs201"/>
+        <ARC PARENT="Cs115" CHILD="Cs203"/>
+        <ARC PARENT="Cs110" CHILD="Cs207"/>
+        <ARC PARENT="Cs115" CHILD="Cs210"/>
+        <ARC PARENT="Cs210" CHILD="Cs215"/>
+        <ARC PARENT="Cs110" CHILD="Cs261"/>
+        <ARC PARENT="Math111" CHILD="Cs261"/>
+        <ARC PARENT="Math122" CHILD="Cs261"/>
+        <ARC PARENT="Cs110" CHILD="Cs270"/>
+        <ARC PARENT="Cs115" CHILD="Cs270"/>
+        <ARC PARENT="Cs100" CHILD="Cs270"/>
+        <ARC PARENT="Engl100" CHILD="Cs270"/>
+        <ARC PARENT="Cs270" CHILD="Cs271"/>
+        <ARC PARENT="Cs110" CHILD="Cs271"/>
+        <ARC PARENT="Cs110" CHILD="Cs280"/>
+        <ARC PARENT="Cs201" CHILD="Cs301"/>
+        <ARC PARENT="Cs210" CHILD="Cs310"/>
+        <ARC PARENT="Cs210" CHILD="Cs315"/>
+        <ARC PARENT="Cs210" CHILD="Cs320"/>
+        <ARC PARENT="Has60credit" CHILD="Cs327"/>
+        <ARC PARENT="Cs210" CHILD="Cs330"/>
+        <ARC PARENT="Cs210" CHILD="Cs335"/>
+        <ARC PARENT="Cs210" CHILD="Cs340"/>
+        <ARC PARENT="Cs210" CHILD="Cs350"/>
+        <ARC PARENT="Cs261" CHILD="Cs360"/>
+        <ARC PARENT="Cs301" CHILD="Cs401"/>
+        <ARC PARENT="Cs360" CHILD="Cs461"/>
+        </STRUCTURE>
+      <DISTRIBUTIONS><DIST TYPE="discrete"><PRIVATE NAME="Cs100"/>
+          <DPIS><DPI>0.773 0.227 </DPI>
+            </DPIS>
+          </DIST>
+        <DIST TYPE="discrete"><PRIVATE NAME="Cs110"/>
+          <DPIS><DPI>0.807 0.193 </DPI>
+            </DPIS>
+          </DIST>
+        <DIST TYPE="discrete"><CONDSET><CONDELEM NAME="Cs110"/>
+            <CONDELEM NAME="Math105"/>
+            <CONDELEM NAME="Math110"/>
+            </CONDSET>
+          <PRIVATE NAME="Cs115"/>
+          <DPIS><DPI INDEXES="0 0 0 ">0.5 0.5 </DPI>
+            <DPI INDEXES="0 0 1 ">0.5 0.5 </DPI>
+            <DPI INDEXES="0 1 0 ">0.5 0.5 </DPI>
+            <DPI INDEXES="0 1 1 ">0.5 0.5 </DPI>
+            <DPI INDEXES="1 0 0 ">0.5 0.5 </DPI>
+            <DPI INDEXES="1 0 1 ">0.5 0.5 </DPI>
+            <DPI INDEXES="1 1 0 ">0.504 0.496 </DPI>
+            <DPI INDEXES="1 1 1 ">0 1 </DPI>
+            </DPIS>
+          </DIST>
+        <DIST TYPE="discrete"><CONDSET><CONDELEM NAME="Cs110"/>
+            </CONDSET>
+          <PRIVATE NAME="Cs201"/>
+          <DPIS><DPI INDEXES="0 ">0.706 0.294 </DPI>
+            <DPI INDEXES="1 ">0 1 </DPI>
+            </DPIS>
+          </DIST>
+        <DIST TYPE="discrete"><CONDSET><CONDELEM NAME="Cs115"/>
+            </CONDSET>
+          <PRIVATE NAME="Cs203"/>
+          <DPIS><DPI INDEXES="0 ">0.5 0.5 </DPI>
+            <DPI INDEXES="1 ">0.5 0.5 </DPI>
+            </DPIS>
+          </DIST>
+        <DIST TYPE="discrete"><CONDSET><CONDELEM NAME="Cs110"/>
+            </CONDSET>
+          <PRIVATE NAME="Cs207"/>
+          <DPIS><DPI INDEXES="0 ">0.79 0.21 </DPI>
+            <DPI INDEXES="1 ">0 1 </DPI>
+            </DPIS>
+          </DIST>
+        <DIST TYPE="discrete"><CONDSET><CONDELEM NAME="Cs115"/>
+            </CONDSET>
+          <PRIVATE NAME="Cs210"/>
+          <DPIS><DPI INDEXES="0 ">0.5 0.5 </DPI>
+            <DPI INDEXES="1 ">0.5 0.5 </DPI>
+            </DPIS>
+          </DIST>
+        <DIST TYPE="discrete"><CONDSET><CONDELEM NAME="Cs210"/>
+            </CONDSET>
+          <PRIVATE NAME="Cs215"/>
+          <DPIS><DPI INDEXES="0 ">0.5 0.5 </DPI>
+            <DPI INDEXES="1 ">0.5 0.5 </DPI>
+            </DPIS>
+          </DIST>
+        <DIST TYPE="discrete"><CONDSET><CONDELEM NAME="Cs110"/>
+            <CONDELEM NAME="Math111"/>
+            <CONDELEM NAME="Math122"/>
+            </CONDSET>
+          <PRIVATE NAME="Cs261"/>
+          <DPIS><DPI INDEXES="0 0 0 ">0.5 0.5 </DPI>
+            <DPI INDEXES="0 0 1 ">0.5 0.5 </DPI>
+            <DPI INDEXES="0 1 0 ">0.5 0.5 </DPI>
+            <DPI INDEXES="0 1 1 ">0.5 0.5 </DPI>
+            <DPI INDEXES="1 0 0 ">0.5 0.5 </DPI>
+            <DPI INDEXES="1 0 1 ">0.5 0.5 </DPI>
+            <DPI INDEXES="1 1 0 ">0.5 0.5 </DPI>
+            <DPI INDEXES="1 1 1 ">0.5 0.5 </DPI>
+            </DPIS>
+          </DIST>
+        <DIST TYPE="discrete"><CONDSET><CONDELEM NAME="Cs110"/>
+            <CONDELEM NAME="Cs115"/>
+            <CONDELEM NAME="Cs100"/>
+            <CONDELEM NAME="Engl100"/>
+            </CONDSET>
+          <PRIVATE NAME="Cs270"/>
+          <DPIS><DPI INDEXES="0 0 0 0 ">0.5 0.5 </DPI>
+            <DPI INDEXES="0 0 0 1 ">0.5 0.5 </DPI>
+            <DPI INDEXES="0 0 1 0 ">0.5 0.5 </DPI>
+            <DPI INDEXES="0 0 1 1 ">0.5 0.5 </DPI>
+            <DPI INDEXES="0 1 0 0 ">0.5 0.5 </DPI>
+            <DPI INDEXES="0 1 0 1 ">0.5 0.5 </DPI>
+            <DPI INDEXES="0 1 1 0 ">0.5 0.5 </DPI>
+            <DPI INDEXES="0 1 1 1 ">0.5 0.5 </DPI>
+            <DPI INDEXES="1 0 0 0 ">0.5 0.5 </DPI>
+            <DPI INDEXES="1 0 0 1 ">0.5 0.5 </DPI>
+            <DPI INDEXES="1 0 1 0 ">0.5 0.5 </DPI>
+            <DPI INDEXES="1 0 1 1 ">0.5 0.5 </DPI>
+            <DPI INDEXES="1 1 0 0 ">0.5 0.5 </DPI>
+            <DPI INDEXES="1 1 0 1 ">0.5 0.5 </DPI>
+            <DPI INDEXES="1 1 1 0 ">0.5 0.5 </DPI>
+            <DPI INDEXES="1 1 1 1 ">0.5 0.5 </DPI>
+            </DPIS>
+          </DIST>
+        <DIST TYPE="discrete"><CONDSET><CONDELEM NAME="Cs270"/>
+            <CONDELEM NAME="Cs110"/>
+            </CONDSET>
+          <PRIVATE NAME="Cs271"/>
+          <DPIS><DPI INDEXES="0 0 ">0.5 0.5 </DPI>
+            <DPI INDEXES="0 1 ">0.5 0.5 </DPI>
+            <DPI INDEXES="1 0 ">0.5 0.5 </DPI>
+            <DPI INDEXES="1 1 ">0.5 0.5 </DPI>
+            </DPIS>
+          </DIST>
+        <DIST TYPE="discrete"><CONDSET><CONDELEM NAME="Cs110"/>
+            </CONDSET>
+          <PRIVATE NAME="Cs280"/>
+          <DPIS><DPI INDEXES="0 ">0.5 0.5 </DPI>
+            <DPI INDEXES="1 ">0.5 0.5 </DPI>
+            </DPIS>
+          </DIST>
+        <DIST TYPE="discrete"><CONDSET><CONDELEM NAME="Cs201"/>
+            </CONDSET>
+          <PRIVATE NAME="Cs301"/>
+          <DPIS><DPI INDEXES="0 ">0.84 0.16 </DPI>
+            <DPI INDEXES="1 ">0 1 </DPI>
+            </DPIS>
+          </DIST>
+        <DIST TYPE="discrete"><CONDSET><CONDELEM NAME="Cs210"/>
+            </CONDSET>
+          <PRIVATE NAME="Cs310"/>
+          <DPIS><DPI INDEXES="0 ">0.5 0.5 </DPI>
+            <DPI INDEXES="1 ">0.5 0.5 </DPI>
+            </DPIS>
+          </DIST>
+        <DIST TYPE="discrete"><CONDSET><CONDELEM NAME="Cs210"/>
+            </CONDSET>
+          <PRIVATE NAME="Cs315"/>
+          <DPIS><DPI INDEXES="0 ">0.5 0.5 </DPI>
+            <DPI INDEXES="1 ">0.5 0.5 </DPI>
+            </DPIS>
+          </DIST>
+        <DIST TYPE="discrete"><CONDSET><CONDELEM NAME="Cs210"/>
+            </CONDSET>
+          <PRIVATE NAME="Cs320"/>
+          <DPIS><DPI INDEXES="0 ">0.5 0.5 </DPI>
+            <DPI INDEXES="1 ">0.5 0.5 </DPI>
+            </DPIS>
+          </DIST>
+        <DIST TYPE="discrete"><CONDSET><CONDELEM NAME="Has60credit"/>
+            </CONDSET>
+          <PRIVATE NAME="Cs327"/>
+          <DPIS><DPI INDEXES="0 ">0.5 0.5 </DPI>
+            <DPI INDEXES="1 ">0.5 0.5 </DPI>
+            </DPIS>
+          </DIST>
+        <DIST TYPE="discrete"><CONDSET><CONDELEM NAME="Cs210"/>
+            </CONDSET>
+          <PRIVATE NAME="Cs330"/>
+          <DPIS><DPI INDEXES="0 ">0.5 0.5 </DPI>
+            <DPI INDEXES="1 ">0.5 0.5 </DPI>
+            </DPIS>
+          </DIST>
+        <DIST TYPE="discrete"><CONDSET><CONDELEM NAME="Cs210"/>
+            </CONDSET>
+          <PRIVATE NAME="Cs335"/>
+          <DPIS><DPI INDEXES="0 ">0.5 0.5 </DPI>
+            <DPI INDEXES="1 ">0.5 0.5 </DPI>
+            </DPIS>
+          </DIST>
+        <DIST TYPE="discrete"><CONDSET><CONDELEM NAME="Cs210"/>
+            </CONDSET>
+          <PRIVATE NAME="Cs340"/>
+          <DPIS><DPI INDEXES="0 ">0.5 0.5 </DPI>
+            <DPI INDEXES="1 ">0.5 0.5 </DPI>
+            </DPIS>
+          </DIST>
+        <DIST TYPE="discrete"><CONDSET><CONDELEM NAME="Cs210"/>
+            </CONDSET>
+          <PRIVATE NAME="Cs350"/>
+          <DPIS><DPI INDEXES="0 ">0.5 0.5 </DPI>
+            <DPI INDEXES="1 ">0.5 0.5 </DPI>
+            </DPIS>
+          </DIST>
+        <DIST TYPE="discrete"><CONDSET><CONDELEM NAME="Cs261"/>
+            </CONDSET>
+          <PRIVATE NAME="Cs360"/>
+          <DPIS><DPI INDEXES="0 ">0.5 0.5 </DPI>
+            <DPI INDEXES="1 ">0.5 0.5 </DPI>
+            </DPIS>
+          </DIST>
+        <DIST TYPE="discrete"><CONDSET><CONDELEM NAME="Cs301"/>
+            </CONDSET>
+          <PRIVATE NAME="Cs401"/>
+          <DPIS><DPI INDEXES="0 ">0.807 0.193 </DPI>
+            <DPI INDEXES="1 ">0 1 </DPI>
+            </DPIS>
+          </DIST>
+        <DIST TYPE="discrete"><CONDSET><CONDELEM NAME="Cs360"/>
+            </CONDSET>
+          <PRIVATE NAME="Cs461"/>
+          <DPIS><DPI INDEXES="0 ">0.5 0.5 </DPI>
+            <DPI INDEXES="1 ">0.5 0.5 </DPI>
+            </DPIS>
+          </DIST>
+        <DIST TYPE="discrete"><PRIVATE NAME="Engl100"/>
+          <DPIS><DPI>0.689 0.311 </DPI>
+            </DPIS>
+          </DIST>
+        <DIST TYPE="discrete"><PRIVATE NAME="Has60credit"/>
+          <DPIS><DPI>0.782 0.218 </DPI>
+            </DPIS>
+          </DIST>
+        <DIST TYPE="discrete"><PRIVATE NAME="Math105"/>
+          <DPIS><DPI>0.765 0.235 </DPI>
+            </DPIS>
+          </DIST>
+        <DIST TYPE="discrete"><PRIVATE NAME="Math110"/>
+          <DPIS><DPI>0.756 0.244 </DPI>
+            </DPIS>
+          </DIST>
+        <DIST TYPE="discrete"><PRIVATE NAME="Math111"/>
+          <DPIS><DPI>0.714 0.286 </DPI>
+            </DPIS>
+          </DIST>
+        <DIST TYPE="discrete"><PRIVATE NAME="Math122"/>
+          <DPIS><DPI>0.807 0.193 </DPI>
+            </DPIS>
+          </DIST>
+        </DISTRIBUTIONS>
+      </BNMODEL>
+    </ANALYSISNOTEBOOK>

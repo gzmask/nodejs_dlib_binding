@@ -437,10 +437,10 @@ char* bayesian_test(char * passed_courses) {
     // node really has a value of 1.  That is to say, we now have evidence that 
     // cs110 is 1.  We can represent this in the network using the following two function
     // calls.
-//		cs110 = 0,
- //     cs201 = 1,
-  //    cs207 = 2,
-   //   cs115 = 3,
+	//  cs110 = 0,
+	//  cs201 = 1,
+	//  cs207 = 2,
+	//  cs115 = 3,
 	//	math105 = 4,
 	//	math110 = 5,
 	//	cs270 = 6,

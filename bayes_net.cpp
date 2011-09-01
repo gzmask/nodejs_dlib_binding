@@ -55,7 +55,7 @@ char* bayesian_test(char *passed_courses) {
 
 	//this is the code block that reads the ???.xbn file
 	char* line_str = (char*)malloc(sizeof(char)*256);//released at :50
-	char* block_str = new char[4096];//released at :55
+	char* block_str = new char[20000];//released at :55
 	const char xbn_filename[] = "input.xbn";
 	std::ifstream xbn_file (xbn_filename);
 	if (xbn_file.is_open()) {
@@ -69,10 +69,14 @@ char* bayesian_test(char *passed_courses) {
 		xbn_file.close();
 	}
 	free(line_str);
-
 	//parsing xml using rapidxml
 	xml_document<>* doc = new xml_document<>();//released at :206
-	doc->parse<0>(block_str);
+	try {
+		doc->parse<0>(block_str);
+	} catch (rapidxml::parse_error &e) {
+		cout<<e.what()<<endl;
+		return NULL;
+	}
 	delete [] block_str;
 	//printf("Name of first node is %s.\n", doc->first_node()->first_node()->first_node("VARIABLES")->first_node("VAR")->name());
 
@@ -101,7 +105,7 @@ char* bayesian_test(char *passed_courses) {
 		}
 		varCounter++;
 	}
-	//for (int i=0; i<varCounter; i++) { if (arrayVars[i]!=NULL) {printf("debug: arrayVars %s with dom %i\n",arrayVars[i], arrayVarDoms[i]);}}
+	for (int i=0; i<varCounter; i++) { if (arrayVars[i]!=NULL) {printf("debug: arrayVars %i with dom %i\n",i, arrayVarDoms[i]);}}
 	//printf("\n\n");
 
 	//count edges
@@ -117,13 +121,13 @@ char* bayesian_test(char *passed_courses) {
 	//store each end of the edges into arrayEdges 
 	for (xml_node<> *node = doc->first_node()->first_node()->first_node("STRUCTURE")->first_node("ARC"); node; node = node->next_sibling()) {
 		for (xml_attribute<> *attr = node->first_attribute(); attr; attr = attr->next_attribute()) {
-			if (strcmp(attr->name(),"PARENT")==0) {
+			if (strcasecmp(attr->name(),"PARENT")==0) {
 				for (int i = 0; i<varCounter; i++) {
-					if (strcmp(arrayVars[i], attr->value())==0)/*matches names in arrayVars*/ {arrayEdges[edgeCounter]=i/*var number*/;edgeCounter++;break;}
+					if (strcasecmp(arrayVars[i], attr->value())==0)/*matches names in arrayVars*/ {arrayEdges[edgeCounter]=i/*var number*/;edgeCounter++;break;}
 				}
-			} else if (strcmp(attr->name(),"CHILD")==0) {
+			} else if (strcasecmp(attr->name(),"CHILD")==0) {
 				for (int i = 0; i<varCounter; i++) {
-					if (strcmp(arrayVars[i], attr->value())==0)/*matches names in arrayVars*/ {arrayEdges[edgeCounter]=i/*var number*/;edgeCounter++;break;}
+					if (strcasecmp(arrayVars[i], attr->value())==0)/*matches names in arrayVars*/ {arrayEdges[edgeCounter]=i/*var number*/;edgeCounter++;break;}
 				}
 			}
 		}
@@ -150,7 +154,7 @@ char* bayesian_test(char *passed_courses) {
 			cptVarCounter=0;
 			for (xml_node<> *node_a = node->first_node("CONDSET")->first_node("CONDELEM"); node_a; node_a = node_a->next_sibling("CONDELEM")) {
 				for (int i=0; i<varCounter; i++) {
-					if (strcmp(node_a->first_attribute()->value(),arrayVars[i])==0){currCPT->vars[cptVarCounter]=i;break;}}
+					if (strcasecmp(node_a->first_attribute()->value(),arrayVars[i])==0){currCPT->vars[cptVarCounter]=i;break;}}
 				//cout<<"parents "<<node_a->first_attribute()->value()<<arrayVars[currCPT->vars[cptVarCounter]]<<endl;
 				cptVarCounter++;
 			}
@@ -159,8 +163,8 @@ char* bayesian_test(char *passed_courses) {
 			currCPT->vars = new int[cptVarCounter];}
 		//store private variable
 		for (int i=0; i<varCounter; i++){
-			if (strcmp(arrayVars[i],node->first_node("PRIVATE")->first_attribute()->value())==0){currCPT->vars[cptVarCounter-1]=i;break;}}
-		//cout<<"child "<<node->first_node("PRIVATE")->first_attribute()->value()<<currCPT->vars[cptVarCounter-1]<<endl;
+			if (strcasecmp(arrayVars[i],node->first_node("PRIVATE")->first_attribute()->value())==0){currCPT->vars[cptVarCounter-1]=i;break;}}
+		//cout<<"child "<<node->first_node("PRIVATE")->first_attribute()->value()<<arrayVars[currCPT->vars[cptVarCounter-1]]<<endl;
 		//init indexArray
 		currCPT->indexArray = NULL;
 		currCPT->indexArrayWidth = cptVarCounter-1;
@@ -215,6 +219,9 @@ char* bayesian_test(char *passed_courses) {
 	//add edges	
 	for (int i=0; i<edgeCounter; i=i+2) {
 		bn.add_edge(arrayEdges[i],arrayEdges[i+1]);
+		cout<<"edge: ";
+		cout<<arrayEdges[i]<<",";
+		cout<<arrayEdges[i+1]<<endl;
 	}
 
 	//add domains	
@@ -225,21 +232,26 @@ char* bayesian_test(char *passed_courses) {
 	assignment parent_state;
 	//add CPTs
 	currCPT = &firstCPT;
-	/*foreach CPT*/while (currCPT->next != NULL) {
+	//foreach CPT
+	while (currCPT->next != NULL) {
 		//child node: currCPT->vars[currCPT->indexArrayWidth]
 		cout<<"parent_state.clear();"<<endl;
 		parent_state.clear();
-		/*foreach parent node of this child node*/for (int i=0; i<currCPT->indexArrayWidth; i++) {
+		//foreach parent node of this child node
+		for (int i=0; i<currCPT->indexArrayWidth; i++) {
 			//parent node: currCPT->vars[i]
 			cout<<"parent_state.add("<<arrayVars[currCPT->vars[i]]<<");"<<endl;
 			parent_state.add(currCPT->vars[i]);
 		}
-		/*foreach row of indexArray and probArray*/for (int i=0; i<currCPT->indexArrayHeight; i++) {
-			/*foreach configuration of index vars*/for (int j=0; j<currCPT->indexArrayWidth; j++) {
+		//foreach row of indexArray and probArray
+		for (int i=0; i<currCPT->indexArrayHeight; i++) {
+			//foreach configuration of index vars
+			for (int j=0; j<currCPT->indexArrayWidth; j++) {
 				cout<<"parent_state["<<arrayVars[currCPT->vars[j]]<<"] = "<<currCPT->indexArray[i*currCPT->indexArrayWidth+j]<<endl;;
 				parent_state[currCPT->vars[j]] = currCPT->indexArray[i*currCPT->indexArrayWidth+j];
 			}
-			/*foreach dom of probArray*/for (int k=0; k<currCPT->probArrayWidth; k++) {
+			//foreach dom of probArray*
+			for (int k=0; k<currCPT->probArrayWidth; k++) {
 				cout<<"set_node_probability(bn, "<<arrayVars[currCPT->vars[currCPT->indexArrayWidth]]<<", "<<k<<", parent_state, "<<currCPT->probArray[i*currCPT->probArrayWidth+k]<<")"<<endl;
 				set_node_probability(bn, currCPT->vars[currCPT->indexArrayWidth], k, parent_state, currCPT->probArray[i*currCPT->probArrayWidth+k]);
 			}
@@ -257,8 +269,24 @@ char* bayesian_test(char *passed_courses) {
     bayesian_network_join_tree solution(bn, join_tree);
 
 	//print prior probs
-	/*foreach variables*/for (int i=0; i<varCounter; i++) {
-		cout<<arrayVars[i]<<solution.probability(i)(1)<<endl;	
+	//foreach variables
+	for (int i=0; i<varCounter; i++) {
+		cout<<arrayVars[i]<<solution.probability(i)(0)<<endl;	
+	}
+
+	//set evidence
+	set_node_value(bn, 2, 0);//john called
+	set_node_as_evidence(bn, 2);
+	set_node_value(bn, 3, 0);//mary called
+	set_node_as_evidence(bn, 3);
+
+	//JTP
+    bayesian_network_join_tree solution_with_evidence(bn, join_tree);
+
+	//print post probs
+	//foreach variables
+	for (int i=0; i<varCounter; i++) {
+		cout<<arrayVars[i]<<solution_with_evidence.probability(i)(0)<<endl;	
 	}
 
 	//clean the mess
