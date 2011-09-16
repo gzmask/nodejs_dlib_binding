@@ -1,4 +1,4 @@
-#include "smile.h"
+#include "smile/smile.h"
 void CreateNetwork(void);
 //void InfereceWithBayesNet(void);
 //void UpgradeToInfluenceDiagram(void);

@@ -1,2 +1,2 @@
 rm -rf build
-node-waf configure build && node app.js
+node-waf configure build && node app.js -vvv
