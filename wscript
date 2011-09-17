@@ -8,8 +8,8 @@ def set_options(opt):
 def configure(conf):
   conf.check_tool("compiler_cxx")
   conf.check_tool("node_addon")
-  conf.env.append_value('LINKFLAGS', '-L/Users/ray/projects/nodejs_dlib_binding/smile')
-  conf.env.append_value('LINKFLAGS', '-I/Users/ray/projects/nodejs_dlib_binding/smile')
+  conf.env.append_value('LINKFLAGS', '-L../smile')
+  conf.env.append_value('LINKFLAGS', '-I../smile')
 
 def build(bld):
   obj = bld.new_task_gen("cxx", "shlib", "node_addon")
