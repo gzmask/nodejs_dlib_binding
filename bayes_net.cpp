@@ -1,9 +1,5 @@
 #include "smile/smile.h"
 void CreateNetwork(void);
-//void InfereceWithBayesNet(void);
-//void UpgradeToInfluenceDiagram(void);
-//void InferenceWithInfluenceDiagram(void);
-//void ComputeValueOfInformation(void);
 
 void CreateNetwork(void) {
 	DSL_network theNet;
